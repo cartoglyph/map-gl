@@ -1,0 +1,16 @@
+{
+	"name": "@dimapio/map-gl",
+	"version": "0.0.1",
+	"description": "",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"scripts": {
+		"build": "tsc"
+	},
+	"devDependencies": {
+		"typescript": "^5.3.3"
+	}
+}
