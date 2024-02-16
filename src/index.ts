@@ -1,1 +1,2 @@
-export const foo = "bar";
+export * from "./components";
+export { default as store } from "./store";
