@@ -10,6 +10,7 @@
 			"@/*": ["./*"]
 		},
 		"moduleResolution": "node",
+		"jsx": "preserve",
 		"sourceMap": false,
 		"composite": false,
 		"strictNullChecks": true,
