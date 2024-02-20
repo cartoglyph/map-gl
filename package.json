@@ -1,6 +1,6 @@
 {
 	"name": "@dimapio/map-gl",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -8,7 +8,9 @@
 	"author": "",
 	"license": "ISC",
 	"scripts": {
-		"build": "tsc && tsc-alias"
+		"build": "tsc && tsc-alias",
+		"watch": "nodemon",
+		"clean": "rm -rf ./dist"
 	},
 	"dependencies": {
 		"@types/mapbox-gl": "^2.7.21",
@@ -16,6 +18,7 @@
 		"mapbox-gl": "^3.1.2"
 	},
 	"devDependencies": {
+		"nodemon": "^3.0.3",
 		"tsc-alias": "^1.8.8",
 		"typescript": "^5.3.3"
 	},
