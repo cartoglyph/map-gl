@@ -1,2 +1,3 @@
 export * from "./components";
-export { default as store } from "./store";
+export * from "./hooks";
+export { MapProvider } from "./context";

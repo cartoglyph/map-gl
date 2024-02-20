@@ -17,8 +17,8 @@ dependencies:
 
 devDependencies:
   '@dimapio/map-gl':
-    specifier: file:../../../map-gl/dist
-    version: file:../../dist
+    specifier: link:/Users/nicholassiebenaller/Projects/map-gl
+    version: link:../..
   '@types/node':
     specifier: ^20
     version: 20.11.19
@@ -2802,9 +2802,4 @@ packages:
   /yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
-    dev: true
-
-  file:../../dist:
-    resolution: {directory: ../../dist, type: directory}
-    name: dist
     dev: true

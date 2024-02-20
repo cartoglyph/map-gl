@@ -1,7 +1,11 @@
-import * as mapStore from "./map.store";
+/**
+ * FOR INTERNAL USE ONLY
+ * USE WITH CAUTION
+ */
+import * as maps from "./maps.store";
 
 const store = {
-	map: mapStore,
+	maps,
 };
 
 export default store;
