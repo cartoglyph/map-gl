@@ -7,6 +7,7 @@ type LayerProps = {
 };
 const Layer: React.FC<LayerProps> = ({ options, beforeId }) => {
 	const map = useInnerMap();
+
 	React.useEffect(() => {
 		if (!map) return;
 		map.addLayer(options, beforeId);
