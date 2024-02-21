@@ -1,3 +1,4 @@
 export * from "./components";
 export * from "./hooks";
-export { MapProvider } from "./context";
+export * from "./types";
+export { MapProvider } from "./MapProvider";

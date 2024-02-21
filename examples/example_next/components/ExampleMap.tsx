@@ -1,6 +1,13 @@
 "use client";
 import React from "react";
-import { Map, useMap, Layer, Source } from "@dimapio/map-gl";
+import {
+	Map,
+	useMap,
+	Layer,
+	Source,
+	ClickPopup,
+	HoverPopup,
+} from "@dimapio/map-gl";
 
 const ExampleMap = () => {
 	const map = useMap("main");
@@ -34,6 +41,32 @@ const ExampleMap = () => {
 					},
 				}}
 			/>
+			<ClickPopup layerId="urban-areas-fill">
+				{({ features: [feature] }) => {
+					return (
+						<div className="flex-col">
+							{Object.entries(feature.properties || {}).map(([key, value]) => (
+								<div key={key}>
+									{key}: {value}
+								</div>
+							))}
+						</div>
+					);
+				}}
+			</ClickPopup>
+			<HoverPopup layerId="urban-areas-fill">
+				{({ features: [feature] }) => {
+					return (
+						<div className="flex-col">
+							{Object.entries(feature.properties || {}).map(([key, value]) => (
+								<div key={key}>
+									{key}: {value}
+								</div>
+							))}
+						</div>
+					);
+				}}
+			</HoverPopup>
 		</Map>
 	);
 };

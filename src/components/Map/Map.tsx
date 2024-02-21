@@ -1,7 +1,7 @@
 import React from "react";
 import mapboxgl from "mapbox-gl";
 import { Provider, useAtom } from "jotai";
-import store from "@/store";
+import atoms, { globalStore } from "@/store";
 import { innerMapAtom, innerMapStore } from "./Map.store";
 import "mapbox-gl/dist/mapbox-gl.css";
 
@@ -19,9 +19,9 @@ export type MapProps = {
 };
 
 const DefaultMapOptions: Partial<mapboxgl.MapboxOptions> = {
-	style: "mapbox://styles/mapbox/streets-v12", // style URL
-	center: [-74.5, 40], // starting position [lng, lat]
-	zoom: 9, // starting zoom
+	style: "mapbox://styles/mapbox/streets-v12",
+	center: [-74.5, 40],
+	zoom: 9,
 };
 
 const InnerMap: React.FC<MapProps> = ({
@@ -33,8 +33,10 @@ const InnerMap: React.FC<MapProps> = ({
 }) => {
 	const containerRef = React.useRef<HTMLDivElement>(null);
 	const loadedRef = React.useRef<boolean>(false);
-	const [_maps, setMaps] = useAtom(store.maps.mapsAtom);
-	const [_innerMap, setInnerMap] = useAtom(innerMapAtom);
+	const [_maps, setMaps] = useAtom(atoms.maps.mapsAtom, { store: globalStore });
+	const [_innerMap, setInnerMap] = useAtom(innerMapAtom, {
+		store: innerMapStore,
+	});
 
 	// Mount the map into the container
 	React.useEffect(() => {
@@ -54,6 +56,7 @@ const InnerMap: React.FC<MapProps> = ({
 		let resizeObserver: ResizeObserver | null = null;
 		map.on("load", (e) => {
 			const mapRef = e.target;
+
 			// Add map to global context & inner context
 			setMaps((prev) => ({ ...prev, [id]: mapRef }));
 			setInnerMap(mapRef);

@@ -1,0 +1,14 @@
+import mapboxgl from "mapbox-gl";
+
+export type MapLayerEvent = (
+	| mapboxgl.MapLayerTouchEvent
+	| mapboxgl.MapLayerMouseEvent
+) &
+	mapboxgl.EventData;
+export type MapEventCallback = (ev: MapLayerEvent) => void;
+export type MapLayerEventType = keyof mapboxgl.MapLayerEventType;
+export type PopupEvent = {
+	lngLat: mapboxgl.LngLat;
+	point: mapboxgl.Point;
+	features: mapboxgl.MapboxGeoJSONFeature[];
+};
