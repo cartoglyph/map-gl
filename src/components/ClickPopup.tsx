@@ -18,7 +18,7 @@ const ClickPopup: React.FC<ClickPopupProps> = ({
 	options,
 	children,
 }) => {
-	const map = useInnerMap();
+	const [map] = useInnerMap();
 	const containerRef = React.useRef<HTMLDivElement | null>(null);
 	const [event, setEvent] = React.useState<PopupEvent | null>(null);
 

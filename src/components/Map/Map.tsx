@@ -2,7 +2,12 @@ import React from "react";
 import mapboxgl from "mapbox-gl";
 import { Provider, useAtom } from "jotai";
 import atoms, { globalStore } from "@/store";
-import { innerMapAtom, innerMapStore } from "./Map.store";
+import {
+	innerMapStore,
+	useInnerLayers,
+	useInnerMap,
+	useInnerSources,
+} from "./Map.store";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 export type MapProps = {
@@ -34,9 +39,9 @@ const InnerMap: React.FC<MapProps> = ({
 	const containerRef = React.useRef<HTMLDivElement>(null);
 	const loadedRef = React.useRef<boolean>(false);
 	const [_maps, setMaps] = useAtom(atoms.maps.mapsAtom, { store: globalStore });
-	const [_innerMap, setInnerMap] = useAtom(innerMapAtom, {
-		store: innerMapStore,
-	});
+	const [_innerMap, setInnerMap] = useInnerMap();
+	const [_innerSources, setInnerSources] = useInnerSources();
+	const [_innerLayers, setInnerLayers] = useInnerLayers();
 
 	// Mount the map into the container
 	React.useEffect(() => {
@@ -56,9 +61,17 @@ const InnerMap: React.FC<MapProps> = ({
 		let resizeObserver: ResizeObserver | null = null;
 		map.on("load", (e) => {
 			const mapRef = e.target;
+			const sources = mapRef.getStyle().sources;
+			const layers = mapRef.getStyle().layers;
+			const currentLayers = layers.reduce(
+				(acc, curr) => ({ ...acc, [curr.id]: curr }),
+				{}
+			);
 
 			// Add map to global context & inner context
 			setMaps((prev) => ({ ...prev, [id]: mapRef }));
+			setInnerSources((prev) => ({ ...prev, ...sources }));
+			setInnerLayers((prev) => ({ ...prev, ...currentLayers }));
 			setInnerMap(mapRef);
 
 			// Setup resize observer to resize the map when the dom changes

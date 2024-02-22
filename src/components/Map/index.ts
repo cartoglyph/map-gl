@@ -1,2 +1,2 @@
 export { default } from "./Map";
-export { useInnerMap } from "./Map.store";
+export { useInnerMap, useInnerSources, useInnerLayers } from "./Map.store";

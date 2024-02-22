@@ -18,7 +18,7 @@ const HoverPopup: React.FC<HoverPopupProps> = ({
 	options,
 	children,
 }) => {
-	const map = useInnerMap();
+	const [map] = useInnerMap();
 	const popupRef = React.useRef<mapboxgl.Popup | null>(null);
 	const containerRef = React.useRef<HTMLDivElement | null>(null);
 	const [event, setEvent] = React.useState<PopupEvent | null>(null);
@@ -58,8 +58,8 @@ const HoverPopup: React.FC<HoverPopupProps> = ({
 		type: "mouseleave",
 		layerId,
 		callback: () => {
-			if (!map) return 
-			map.getCanvas().style.cursor = '';
+			if (!map) return;
+			map.getCanvas().style.cursor = "";
 			setEvent(null);
 			popupRef.current?.remove();
 		},

@@ -12,3 +12,6 @@ export type PopupEvent = {
 	point: mapboxgl.Point;
 	features: mapboxgl.MapboxGeoJSONFeature[];
 };
+export type LayerOptions = mapboxgl.AnyLayer & {
+	beforeId?: string;
+};
