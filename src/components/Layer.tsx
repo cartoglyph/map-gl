@@ -13,16 +13,21 @@ const Layer: React.FC<LayerProps> = ({ options, beforeId }) => {
 	const prevPropsRef = React.useRef<LayerOptions>({ ...options, beforeId });
 	prevPropsRef.current = { ...options, beforeId };
 
+	// Handle mount
 	React.useEffect(() => {
 		if (!map) return;
 		setLayers((prev) => ({ ...prev, [options.id]: { ...options, beforeId } }));
+	}, [map]);
+	// Handle unmount
+	React.useEffect(() => {
 		return () => {
 			setLayers((prev) => {
 				delete prev[options.id];
 				return prev;
 			});
 		};
-	}, [map]);
+	}, []);
+	// Handle update
 	React.useEffect(() => {
 		if (!map) return;
 		updateLayer(

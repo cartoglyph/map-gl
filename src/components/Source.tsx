@@ -13,16 +13,21 @@ const Source: React.FC<SourceProps> = ({ id, options }) => {
 	const prevPropsRef = React.useRef<mapboxgl.AnySourceData>(options);
 	prevPropsRef.current = options;
 
+	// Handle mount
 	React.useEffect(() => {
 		if (!map) return;
 		setSources((prev) => ({ ...prev, [id]: options }));
+	}, [map, id]);
+	// Handle unmount
+	React.useEffect(() => {
 		return () => {
 			setSources((prev) => {
 				delete prev[id];
 				return prev;
 			});
 		};
-	}, [map, id]);
+	}, []);
+	// Handle update
 	React.useEffect(() => {
 		if (!map) return;
 		updateSource(map, id, options, prevPropsRef.current);

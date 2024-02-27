@@ -38,6 +38,7 @@ const InnerMap: React.FC<MapProps> = ({
 }) => {
 	const containerRef = React.useRef<HTMLDivElement>(null);
 	const loadedRef = React.useRef<boolean>(false);
+	const resizeObserverRef = React.useRef<ResizeObserver>();
 	const [_maps, setMaps] = useAtom(atoms.maps.mapsAtom, { store: globalStore });
 	const [_innerMap, setInnerMap] = useInnerMap();
 	const [_innerSources, setInnerSources] = useInnerSources();
@@ -84,19 +85,23 @@ const InnerMap: React.FC<MapProps> = ({
 					}
 				});
 				resizeObserver.observe(containerRef.current);
+				resizeObserverRef.current = resizeObserver;
 			}
 		});
+	}, [id, options]);
 
-		// Cleanup map reference and resize observer
+	// Handle unmount
+	React.useEffect(() => {
 		return () => {
+			// Cleanup map reference and resize observer
 			setMaps((prev) => {
 				delete prev[id];
 				return prev;
 			});
 			setInnerMap(null);
-			resizeObserver?.disconnect();
+			resizeObserverRef.current?.disconnect();
 		};
-	}, [id, options]);
+	}, []);
 
 	return (
 		<div id={id} ref={containerRef} style={style}>
