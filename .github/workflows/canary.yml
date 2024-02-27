@@ -30,6 +30,6 @@ jobs:
           CURRENT_VERSION=$(pnpm pkg get version | tr -d \")
           CANARY_VERSION=$CURRENT_VERSION-${{ github.sha }}
           pnpm version --prerelease $CANARY_VERSION --git-tag-version=false
-          pnpm publish --tag canary
+          pnpm publish --tag canary --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
