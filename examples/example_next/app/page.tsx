@@ -1,14 +1,8 @@
-"use client";
-import ExampleMap from "@/components/ExampleMap";
-import { MapProvider } from "@dimapio/map-gl";
-
 export default function Home() {
-	return (
-		<main className="flex flex-col w-full items-center">
-			<h1>@dimapio/map-gl</h1>
-			<MapProvider>
-				<ExampleMap />
-			</MapProvider>
-		</main>
-	);
+  return (
+    <main className="h-full w-full">
+      <h1>@dimapio/map-gl Examples</h1>
+      <p>This is an example app using @dimapio/map-gl with Next.js</p>
+    </main>
+  );
 }
