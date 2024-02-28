@@ -9,4 +9,8 @@ export const EXAMPLES: ExampleItem[] = [
     label: "Popups",
     href: "/popups",
   },
+  {
+    label: "Hover Style",
+    href: "/hover-map",
+  },
 ];
