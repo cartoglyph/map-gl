@@ -81,7 +81,7 @@ const Layer: React.FC<LayerProps> = ({
     type: "mouseleave",
     layerId: options.id,
     disabled: !hover,
-    callback: (e) => {
+    callback: () => {
       if (!map) return;
       for (const [
         featureId,
@@ -101,7 +101,7 @@ const Layer: React.FC<LayerProps> = ({
     type: "mouseover",
     layerId: options.id,
     disabled: !hoverCursor,
-    callback: (e) => {
+    callback: () => {
       if (!map || !hoverCursor) return;
       map.getCanvas().style.cursor = hoverCursor;
     },

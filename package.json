@@ -18,6 +18,7 @@
 		"mapbox-gl": "^3.1.2"
 	},
 	"devDependencies": {
+		"@types/node": "^20.11.24",
 		"nodemon": "^3.0.3",
 		"prettier": "^3.2.5",
 		"prettier-plugin-tailwindcss": "^0.5.11",
