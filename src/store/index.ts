@@ -6,7 +6,7 @@ import { createStore } from "jotai";
 import * as maps from "./maps.store";
 
 const store = {
-	maps,
+  maps,
 };
 
 /** Global map-gl store */

@@ -6,11 +6,15 @@ export const EXAMPLES: ExampleItem[] = [
     href: "/basic-map",
   },
   {
-    label: "Popups",
-    href: "/popups",
+    label: "Popup",
+    href: "/popup",
   },
   {
     label: "Hover Style",
-    href: "/hover-map",
+    href: "/hover-style",
+  },
+  {
+    label: "BBox Tool",
+    href: "/bbox-tool",
   },
 ];

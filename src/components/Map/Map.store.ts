@@ -11,7 +11,7 @@ export const innerMapAtom = atom<mapboxgl.Map | null>(null);
 
 /** Utility to access the map reference within the map */
 export function useInnerMap() {
-	return useAtom(innerMapAtom, { store: innerMapStore });
+  return useAtom(innerMapAtom, { store: innerMapStore });
 }
 
 /** A record of all source references by source id within a map context */
@@ -22,7 +22,7 @@ export const innerSourcesAtom = atom<Sources>({});
 
 /** Utility to access the source references within the map */
 export function useInnerSources() {
-	return useAtom(innerSourcesAtom, { store: innerMapStore });
+  return useAtom(innerSourcesAtom, { store: innerMapStore });
 }
 
 /** A record of all layer references by layer id within a map context */
@@ -33,47 +33,47 @@ export const innerLayersAtom = atom<Layers>({});
 
 /** Utility to access the layers references within the map */
 export function useInnerLayers() {
-	return useAtom(innerLayersAtom, { store: innerMapStore });
+  return useAtom(innerLayersAtom, { store: innerMapStore });
 }
 
 /** Add/Remove sources within the map */
 innerMapStore.sub(innerSourcesAtom, () => {
-	const map = innerMapStore.get(innerMapAtom);
-	const sources = innerMapStore.get(innerSourcesAtom);
-	if (!map) return;
+  const map = innerMapStore.get(innerMapAtom);
+  const sources = innerMapStore.get(innerSourcesAtom);
+  if (!map) return;
 
-	// Add map sources that are from the atom
-	Object.entries(sources).forEach(([id, options]) => {
-		createSource(map, id, options);
-	});
+  // Add map sources that are from the atom
+  Object.entries(sources).forEach(([id, options]) => {
+    createSource(map, id, options);
+  });
 
-	// Remove map sources that do not exist in the atom
-	const currentSources = map.getStyle().sources;
-	const sourceIds = Object.keys(sources);
-	Object.keys(currentSources).forEach((id) => {
-		if (!sourceIds.includes(id)) {
-			removeSource(map, id);
-		}
-	});
+  // Remove map sources that do not exist in the atom
+  const currentSources = map.getStyle().sources;
+  const sourceIds = Object.keys(sources);
+  Object.keys(currentSources).forEach((id) => {
+    if (!sourceIds.includes(id)) {
+      removeSource(map, id);
+    }
+  });
 });
 
 /** Add/Remove layers within the map */
 innerMapStore.sub(innerLayersAtom, () => {
-	const map = innerMapStore.get(innerMapAtom);
-	const layers = innerMapStore.get(innerLayersAtom);
-	if (!map) return;
+  const map = innerMapStore.get(innerMapAtom);
+  const layers = innerMapStore.get(innerLayersAtom);
+  if (!map) return;
 
-	// Add map layers that are from the atom
-	Object.entries(layers).forEach(([_id, { beforeId, ...options }]) => {
-		createLayer(map, options, beforeId);
-	});
+  // Add map layers that are from the atom
+  Object.entries(layers).forEach(([_id, { beforeId, ...options }]) => {
+    createLayer(map, options, beforeId);
+  });
 
-	// Remove map sources that do not exist in the atom
-	const currentLayers = map.getStyle().layers;
-	const layerIds = Object.keys(layers);
-	currentLayers.forEach((layer) => {
-		if (!layerIds.includes(layer.id)) {
-			removeLayer(map, layer);
-		}
-	});
+  // Remove map sources that do not exist in the atom
+  const currentLayers = map.getStyle().layers;
+  const layerIds = Object.keys(layers);
+  currentLayers.forEach((layer) => {
+    if (!layerIds.includes(layer.id)) {
+      removeLayer(map, layer);
+    }
+  });
 });

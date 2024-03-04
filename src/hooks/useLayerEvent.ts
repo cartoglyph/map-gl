@@ -2,18 +2,20 @@ import React from "react";
 import mapboxgl from "mapbox-gl";
 import { MapEventCallback, MapLayerEventType } from "@/types";
 
-type UseMapEventParams = {
+type UseMapLayerParams = {
   map: mapboxgl.Map | null;
   type: MapLayerEventType;
+  layerId: string;
   disabled?: boolean;
   callback: MapEventCallback;
 };
-const useMapEvent = ({
+const useLayerEvent = ({
   map,
   type,
+  layerId,
   disabled = false,
   callback,
-}: UseMapEventParams) => {
+}: UseMapLayerParams) => {
   const callbackRef = React.useRef(callback);
   callbackRef.current = callback;
 
@@ -21,11 +23,11 @@ const useMapEvent = ({
     if (!map) return;
     if (disabled) return;
     const listener: MapEventCallback = (e) => callbackRef.current(e);
-    map.on(type, listener);
+    map.on(type, layerId, listener);
     return () => {
       map.off(type, listener);
     };
-  }, [map, type, disabled]);
+  }, [map, type, layerId, disabled]);
 };
 
-export default useMapEvent;
+export default useLayerEvent;

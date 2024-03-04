@@ -2,7 +2,7 @@ import React from "react";
 import { useInnerLayers, useInnerMap } from "./Map";
 import { updateLayer } from "@/utils/layerUtils";
 import { LayerOptions } from "@/types";
-import { useMapEvent } from "@/hooks";
+import { useLayerEvent } from "@/hooks";
 
 type LayerProps = {
   /** Layer options from mapbox-gl */
@@ -23,7 +23,7 @@ const Layer: React.FC<LayerProps> = ({
   const [map] = useInnerMap();
   const [_layers, setLayers] = useInnerLayers();
   const prevPropsRef = React.useRef<LayerOptions>({ ...options, beforeId });
-  prevPropsRef.current = { ...options, beforeId };
+
   const hoveredFeatureIdsRef = React.useRef<Map<string | number, string>>(
     new Map()
   );
@@ -51,9 +51,10 @@ const Layer: React.FC<LayerProps> = ({
       { ...options, beforeId },
       prevPropsRef.current
     );
+    prevPropsRef.current = { ...options, beforeId };
   }, [map, options, beforeId]);
   // Handle 'hover' feature state
-  useMapEvent({
+  useLayerEvent({
     map,
     type: "mouseenter",
     layerId: options.id,
@@ -76,7 +77,7 @@ const Layer: React.FC<LayerProps> = ({
       });
     },
   });
-  useMapEvent({
+  useLayerEvent({
     map,
     type: "mouseleave",
     layerId: options.id,
@@ -96,7 +97,7 @@ const Layer: React.FC<LayerProps> = ({
     },
   });
   // Handle cursor
-  useMapEvent({
+  useLayerEvent({
     map,
     type: "mouseover",
     layerId: options.id,

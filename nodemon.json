@@ -1,5 +1,5 @@
 {
-	"exec": "yarn build",
-	"watch": ["src"],
-	"ext": "ts,tsx,js,jsx,json"
+  "exec": "yarn build",
+  "watch": ["src"],
+  "ext": "ts,tsx,js,jsx,json"
 }
