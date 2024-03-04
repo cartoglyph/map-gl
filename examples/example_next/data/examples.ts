@@ -17,4 +17,8 @@ export const EXAMPLES: ExampleItem[] = [
     label: "BBox Tool",
     href: "/bbox-tool",
   },
+  {
+    label: "Draw Tool",
+    href: "/draw-tool",
+  },
 ];
