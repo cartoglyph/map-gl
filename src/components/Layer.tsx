@@ -14,14 +14,12 @@ type LayerProps = {
   /** Sets the cursor when a feature is hovered */
   hoverCursor?: React.CSSProperties["cursor"];
 };
-const Layer: React.FC<LayerProps> = ({
-  options,
-  beforeId,
-  hover = false,
-  hoverCursor,
-}) => {
+const Layer: React.FC<LayerProps> = (props) => {
+  const { options, beforeId, hover = false, hoverCursor } = props;
   const [map] = useInnerMap();
   const [_layers, setLayers] = useInnerLayers();
+  const propsRef = React.useRef<LayerProps>(props);
+  propsRef.current = props;
   const prevPropsRef = React.useRef<LayerOptions>({ ...options, beforeId });
 
   const hoveredFeatureIdsRef = React.useRef<Map<string | number, string>>(
@@ -103,8 +101,8 @@ const Layer: React.FC<LayerProps> = ({
     layerId: options.id,
     disabled: !hoverCursor,
     callback: () => {
-      if (!map || !hoverCursor) return;
-      map.getCanvas().style.cursor = hoverCursor;
+      if (!map || !propsRef.current.hoverCursor) return;
+      map.getCanvas().style.cursor = propsRef.current.hoverCursor;
     },
   });
 

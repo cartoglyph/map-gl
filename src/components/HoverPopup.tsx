@@ -43,7 +43,6 @@ const HoverPopup: React.FC<HoverPopupProps> = ({
     callback: (e) => {
       if (!containerRef.current) return;
       if (!map) return;
-      map.getCanvas().style.cursor = "pointer";
       const features = e.features || [];
       if (!features.length) return;
       popupRef.current?.setLngLat(e.lngLat);
@@ -61,7 +60,6 @@ const HoverPopup: React.FC<HoverPopupProps> = ({
     layerId,
     callback: () => {
       if (!map) return;
-      map.getCanvas().style.cursor = "";
       setEvent(null);
       popupRef.current?.remove();
     },
