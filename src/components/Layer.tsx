@@ -118,7 +118,17 @@ const Layer: React.FC<LayerProps> = (props) => {
     disabled: !click,
     callback: (e) => {
       if (!map) return;
+
+      // Clear existing 'click' feature states
+      for (const [
+        featureId,
+        source,
+      ] of clickedFeatureIdsRef.current.entries()) {
+        map.setFeatureState({ id: featureId, source }, { click: false });
+      }
       clickedFeatureIdsRef.current.clear();
+
+      // Set 'click' feature states
       const features = e.features || [];
       features.forEach((feature) => {
         if (!feature.id) {
