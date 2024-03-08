@@ -40,16 +40,19 @@ jobs:
         with:
           version: 8
 
-      - name: Install dependencies
+      - name: Install library dependencies
+        run: pnpm install
+
+      - name: Build library
+        run: pnpm build
+
+      - name: Install Next.js dependencies
+        working-directory: ./examples/example_next
         run: pnpm install
 
       - name: Build with Next.js
         working-directory: ./examples/example_next
         run: pnpm next build
-
-      - name: Static HTML export with Next.js
-        working-directory: ./examples/example_next
-        run: pnpm next export
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
