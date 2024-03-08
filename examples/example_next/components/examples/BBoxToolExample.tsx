@@ -1,17 +1,17 @@
 "use client";
 import React from "react";
-import {
-  Map,
-  useMap,
-  Layer,
-  Source,
-  BBoxTool,
-  DrawTool,
-} from "@dimapio/map-gl";
+import { Map, useMap, Layer, Source, BBoxTool } from "@dimapio/map-gl";
 
-const DrawToolMap = () => {
+const BBoxToolExample = () => {
   const map = useMap("main");
-  const [isDrawMode, setDrawMode] = React.useState<boolean>(false);
+  const [isSelecting, setIsSelecting] = React.useState<boolean>(false);
+  const [features, setFeatures] = React.useState<
+    mapboxgl.MapboxGeoJSONFeature[]
+  >([]);
+  const featureIds = React.useMemo(
+    () => features.map((f) => Number(f.id)),
+    [features]
+  );
 
   return (
     <div className="relative h-full w-full">
@@ -19,9 +19,9 @@ const DrawToolMap = () => {
         <h1 className="font-bold">Controls</h1>
         <button
           className="border border-gray-300 bg-gray-300 px-2 hover:bg-gray-400"
-          onClick={() => setDrawMode((prev) => !prev)}
+          onClick={() => setIsSelecting((prev) => !prev)}
         >
-          {isDrawMode ? "Disable Draw Mode" : "Enable Draw Mode"}
+          {isSelecting ? "Disable BBox Mode" : "Enable BBox Mode"}
         </button>
       </div>
       <Map
@@ -47,15 +47,34 @@ const DrawToolMap = () => {
             source: "urban-areas",
             layout: {},
             paint: {
-              "fill-color": "#f08",
+              "fill-color": [
+                "case",
+                ["in", ["id"], ["literal", featureIds]],
+                "blue",
+                "#f08",
+              ],
               "fill-opacity": 0.7,
             },
           }}
         />
-        <DrawTool disabled={!isDrawMode} />
+        <BBoxTool
+          bboxStyle={{
+            border: "1px solid blue",
+            backgroundColor: "blue",
+            opacity: 0.5,
+          }}
+          disabled={!isSelecting}
+          onBBox={(bbox) => {
+            if (!map) return;
+            const features = map.queryRenderedFeatures(bbox, {
+              layers: ["urban-areas-fill"],
+            });
+            setFeatures(features);
+          }}
+        />
       </Map>
     </div>
   );
 };
 
-export default DrawToolMap;
+export default BBoxToolExample;

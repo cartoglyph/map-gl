@@ -4,4 +4,4 @@ export { default as Source } from "./Source";
 export { default as ClickPopup } from "./ClickPopup";
 export { default as HoverPopup } from "./HoverPopup";
 export { default as BBoxTool } from "./BBoxTool";
-export { default as DrawTool } from "./DrawTool";
+export { default as DrawPolygonTool } from "./DrawPolygonTool";

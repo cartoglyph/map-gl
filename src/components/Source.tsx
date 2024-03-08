@@ -23,7 +23,7 @@ const Source: React.FC<SourceProps> = ({ id, options }) => {
     return () => {
       setSources((prev) => {
         delete prev[id];
-        return prev;
+        return { ...prev };
       });
     };
   }, []);

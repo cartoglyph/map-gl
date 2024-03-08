@@ -41,7 +41,7 @@ const Layer: React.FC<LayerProps> = (props) => {
     return () => {
       setLayers((prev) => {
         delete prev[options.id];
-        return prev;
+        return { ...prev };
       });
     };
   }, []);

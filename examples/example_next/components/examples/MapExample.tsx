@@ -2,7 +2,7 @@
 import React from "react";
 import { Map, useMap, Layer, Source } from "@dimapio/map-gl";
 
-const HoverMap = () => {
+const MapExample = () => {
   const _map = useMap("main");
 
   return (
@@ -11,7 +11,7 @@ const HoverMap = () => {
       accessToken={String(process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN)}
       style={{ width: "100%", height: "100%" }}
       options={{
-        zoom: 6, // starting zoom
+        zoom: 3, // starting zoom
       }}
     >
       <Source
@@ -19,7 +19,6 @@ const HoverMap = () => {
         options={{
           type: "geojson",
           data: "https://docs.mapbox.com/mapbox-gl-js/assets/ne_50m_urban_areas.geojson",
-          generateId: true,
         }}
       />
       <Layer
@@ -29,20 +28,13 @@ const HoverMap = () => {
           source: "urban-areas",
           layout: {},
           paint: {
-            "fill-color": [
-              "case",
-              ["==", ["feature-state", "hover"], true],
-              "#4bff2b",
-              "#f08",
-            ],
-            "fill-opacity": 1,
+            "fill-color": "#f08",
+            "fill-opacity": 0.4,
           },
         }}
-        hover
-        hoverCursor="pointer"
       />
     </Map>
   );
 };
 
-export default HoverMap;
+export default MapExample;
