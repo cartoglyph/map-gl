@@ -36,3 +36,9 @@ export default function ExamplePage() {
     </main>
   );
 }
+
+export function generateStaticParams() {
+  return Object.values(Route).map((route) => {
+    return { example: route };
+  });
+}
