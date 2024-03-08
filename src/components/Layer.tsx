@@ -13,18 +13,21 @@ type LayerProps = {
   hover?: boolean;
   /** Sets the cursor when a feature is hovered */
   hoverCursor?: React.CSSProperties["cursor"];
+  /** Enabled the 'click' feature state */
+  click?: boolean;
 };
-const Layer: React.FC<LayerProps> = ({
-  options,
-  beforeId,
-  hover = false,
-  hoverCursor,
-}) => {
+const Layer: React.FC<LayerProps> = (props) => {
+  const { options, beforeId, hover = false, hoverCursor, click } = props;
   const [map] = useInnerMap();
   const [_layers, setLayers] = useInnerLayers();
+  const propsRef = React.useRef<LayerProps>(props);
+  propsRef.current = props;
   const prevPropsRef = React.useRef<LayerOptions>({ ...options, beforeId });
 
   const hoveredFeatureIdsRef = React.useRef<Map<string | number, string>>(
+    new Map()
+  );
+  const clickedFeatureIdsRef = React.useRef<Map<string | number, string>>(
     new Map()
   );
 
@@ -103,8 +106,43 @@ const Layer: React.FC<LayerProps> = ({
     layerId: options.id,
     disabled: !hoverCursor,
     callback: () => {
-      if (!map || !hoverCursor) return;
-      map.getCanvas().style.cursor = hoverCursor;
+      if (!map || !propsRef.current.hoverCursor) return;
+      map.getCanvas().style.cursor = propsRef.current.hoverCursor;
+    },
+  });
+  // Handle click
+  useLayerEvent({
+    map,
+    type: "click",
+    layerId: options.id,
+    disabled: !click,
+    callback: (e) => {
+      if (!map) return;
+
+      // Clear existing 'click' feature states
+      for (const [
+        featureId,
+        source,
+      ] of clickedFeatureIdsRef.current.entries()) {
+        map.setFeatureState({ id: featureId, source }, { click: false });
+      }
+      clickedFeatureIdsRef.current.clear();
+
+      // Set 'click' feature states
+      const features = e.features || [];
+      features.forEach((feature) => {
+        if (!feature.id) {
+          console.warn(
+            "Attempted to set the feature state of a feature with no ID"
+          );
+          return;
+        }
+        clickedFeatureIdsRef.current.set(feature.id, feature.source);
+        map.setFeatureState(
+          { id: feature.id, source: feature.source },
+          { click: true }
+        );
+      });
     },
   });
 
