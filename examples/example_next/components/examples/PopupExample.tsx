@@ -9,7 +9,7 @@ import {
   HoverPopup,
 } from "@dimapio/map-gl";
 
-const PopupsMap = () => {
+const PopupExample = () => {
   const _map = useMap("main");
 
   return (
@@ -70,4 +70,4 @@ const PopupsMap = () => {
   );
 };
 
-export default PopupsMap;
+export default PopupExample;

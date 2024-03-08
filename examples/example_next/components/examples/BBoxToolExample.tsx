@@ -2,7 +2,7 @@
 import React from "react";
 import { Map, useMap, Layer, Source, BBoxTool } from "@dimapio/map-gl";
 
-const HoverMap = () => {
+const BBoxToolExample = () => {
   const map = useMap("main");
   const [isSelecting, setIsSelecting] = React.useState<boolean>(false);
   const [features, setFeatures] = React.useState<
@@ -77,4 +77,4 @@ const HoverMap = () => {
   );
 };
 
-export default HoverMap;
+export default BBoxToolExample;

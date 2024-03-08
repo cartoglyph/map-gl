@@ -84,8 +84,10 @@ const InnerMap: React.FC<MapProps> = ({
           // debounce map resize
           if (timer) clearTimeout(timer);
           timer = setTimeout(() => {
-            if (mapRef.loaded()) {
+            try {
               mapRef.resize();
+            } catch (err) {
+              /** ignore error */
             }
           }, 100);
         });
@@ -101,7 +103,7 @@ const InnerMap: React.FC<MapProps> = ({
       // Cleanup map reference and resize observer
       setMaps((prev) => {
         delete prev[id];
-        return prev;
+        return { ...prev };
       });
       setInnerMap(null);
       resizeObserverRef.current?.disconnect();

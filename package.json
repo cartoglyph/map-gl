@@ -14,11 +14,13 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@turf/boolean-valid": "^6.5.0",
     "@types/mapbox-gl": "^2.7.21",
     "jotai": "^2.6.4",
     "mapbox-gl": "^3.1.2"
   },
   "devDependencies": {
+    "@types/geojson": "^7946.0.14",
     "@types/node": "^20.11.24",
     "nodemon": "^3.0.3",
     "prettier": "^3.2.5",
