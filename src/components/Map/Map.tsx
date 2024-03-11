@@ -1,13 +1,9 @@
 import React from "react";
 import mapboxgl from "mapbox-gl";
-import { Provider, useAtom } from "jotai";
-import atoms, { globalStore } from "@/store";
-import {
-  innerMapStore,
-  useInnerLayers,
-  useInnerMap,
-  useInnerSources,
-} from "./Map.store";
+import { Provider } from "jotai";
+import { useInnerLayers, useInnerMap, useInnerSources } from "./Map.hooks";
+import { innerMapStore } from "./Map.store";
+import { useMaps } from "@/hooks";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 export type MapProps = {
@@ -39,7 +35,7 @@ const InnerMap: React.FC<MapProps> = ({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const loadedRef = React.useRef<boolean>(false);
   const resizeObserverRef = React.useRef<ResizeObserver>();
-  const [_maps, setMaps] = useAtom(atoms.maps.mapsAtom, { store: globalStore });
+  const [_maps, setMaps] = useMaps();
   const [_innerMap, setInnerMap] = useInnerMap();
   const [_innerSources, setInnerSources] = useInnerSources();
   const [_innerLayers, setInnerLayers] = useInnerLayers();
@@ -54,12 +50,11 @@ const InnerMap: React.FC<MapProps> = ({
 
     // Setup mapbox access token and create map
     mapboxgl.accessToken = accessToken;
-
     const map = new mapboxgl.Map({
-      container: id, // container ID
+      container: id,
       ...{ ...DefaultMapOptions, ...options },
     });
-    let resizeObserver: ResizeObserver | null = null;
+
     map.on("load", (e) => {
       const mapRef = e.target;
       const sources = mapRef.getStyle().sources;
@@ -80,7 +75,7 @@ const InnerMap: React.FC<MapProps> = ({
         console.warn("Missing container after map has loaded");
       } else {
         let timer: NodeJS.Timeout;
-        resizeObserver = new ResizeObserver(() => {
+        const resizeObserver = new ResizeObserver(() => {
           // debounce map resize
           if (timer) clearTimeout(timer);
           timer = setTimeout(() => {

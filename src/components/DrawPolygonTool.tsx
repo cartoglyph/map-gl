@@ -12,6 +12,28 @@ import {
   Polygon,
 } from "geojson";
 import Layer from "./Layer";
+import mapboxgl from "mapbox-gl";
+
+const DefaultFillPaint: mapboxgl.FillPaint = {
+  "fill-color": "blue",
+  "fill-opacity": 0.2,
+};
+
+const DefaultLineLayout: mapboxgl.LineLayout = {
+  "line-cap": "round",
+  "line-join": "round",
+};
+
+const DefaultLinePaint: mapboxgl.LinePaint = {
+  "line-color": "blue",
+  "line-dasharray": [1, 2],
+  "line-width": 2,
+};
+
+const DefaultCirclePaint: mapboxgl.CirclePaint = {
+  "circle-color": "blue",
+  "circle-radius": 5,
+};
 
 // https://docs.mapbox.com/mapbox-gl-js/example/geojson-line/
 type DrawPolygonToolProps = {
@@ -19,12 +41,20 @@ type DrawPolygonToolProps = {
   disabled?: boolean;
   onPolygon: (polygon: Feature<Polygon>) => void;
   onInvalid?: () => void;
+  fillPaint?: mapboxgl.FillPaint;
+  lineLayout?: mapboxgl.LineLayout;
+  linePaint?: mapboxgl.LinePaint;
+  circlePaint?: mapboxgl.CirclePaint;
 };
 const DrawPolygonTool: React.FC<DrawPolygonToolProps> = ({
   id,
   disabled,
   onPolygon,
   onInvalid,
+  fillPaint,
+  lineLayout,
+  linePaint,
+  circlePaint,
 }) => {
   const [map] = useInnerMap();
   const pointsRef = React.useRef<Position[]>([]);
@@ -210,8 +240,8 @@ const DrawPolygonTool: React.FC<DrawPolygonToolProps> = ({
           source: fillSourceId,
           type: "fill",
           paint: {
-            "fill-color": "blue",
-            "fill-opacity": 0.2,
+            ...DefaultFillPaint,
+            ...fillPaint,
           },
         }}
       />
@@ -232,13 +262,12 @@ const DrawPolygonTool: React.FC<DrawPolygonToolProps> = ({
           source: lineSourceId,
           type: "line",
           layout: {
-            "line-cap": "round",
-            "line-join": "round",
+            ...DefaultLineLayout,
+            ...lineLayout,
           },
           paint: {
-            "line-color": "blue",
-            "line-dasharray": [1, 2],
-            "line-width": 2,
+            ...DefaultLinePaint,
+            ...linePaint,
           },
         }}
       />
@@ -258,8 +287,8 @@ const DrawPolygonTool: React.FC<DrawPolygonToolProps> = ({
           source: pointSourceId,
           type: "circle",
           paint: {
-            "circle-color": "blue",
-            "circle-radius": 5,
+            ...DefaultCirclePaint,
+            ...circlePaint,
           },
         }}
       />

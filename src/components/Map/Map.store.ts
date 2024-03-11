@@ -1,6 +1,6 @@
 import { createSource, removeSource } from "@/utils/sourceUtils";
 import { createLayer, removeLayer } from "@/utils/layerUtils";
-import { atom, createStore, useAtom } from "jotai";
+import { atom, createStore } from "jotai";
 import { LayerOptions } from "@/types";
 
 /** Inner map reference store */
@@ -9,32 +9,11 @@ export const innerMapStore = createStore();
 /** Inner map reference for use with children layers */
 export const innerMapAtom = atom<mapboxgl.Map | null>(null);
 
-/** Utility to access the map reference within the map */
-export function useInnerMap() {
-  return useAtom(innerMapAtom, { store: innerMapStore });
-}
-
 /** A record of all source references by source id within a map context */
 export type Sources = Record<string, mapboxgl.AnySourceData>;
 
 /** An atom of source references within a map context */
 export const innerSourcesAtom = atom<Sources>({});
-
-/** Utility to access the source references within the map */
-export function useInnerSources() {
-  return useAtom(innerSourcesAtom, { store: innerMapStore });
-}
-
-/** A record of all layer references by layer id within a map context */
-export type Layers = Record<string, LayerOptions>;
-
-/** An atom of source references within a map context */
-export const innerLayersAtom = atom<Layers>({});
-
-/** Utility to access the layers references within the map */
-export function useInnerLayers() {
-  return useAtom(innerLayersAtom, { store: innerMapStore });
-}
 
 /** Add/Remove sources within the map */
 innerMapStore.sub(innerSourcesAtom, () => {
@@ -56,6 +35,12 @@ innerMapStore.sub(innerSourcesAtom, () => {
     }
   });
 });
+
+/** A record of all layer references by layer id within a map context */
+export type Layers = Record<string, LayerOptions>;
+
+/** An atom of source references within a map context */
+export const innerLayersAtom = atom<Layers>({});
 
 /** Add/Remove layers within the map */
 innerMapStore.sub(innerLayersAtom, () => {
