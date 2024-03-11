@@ -1,6 +1,9 @@
+"use client";
 import React from "react";
 import { SidebarItem, LinkItem, HeadingItem } from "@/types";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
 
 type SidebarProps = {
   items: SidebarItem[];
@@ -27,8 +30,15 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
 export default Sidebar;
 
 const SidebarLink: React.FC<LinkItem> = ({ label, route }) => {
+  const pathname = usePathname();
+  const isSelected = pathname === route;
   return (
-    <div className="cursor-pointer text-sm text-gray-500 transition ease-in-out hover:text-gray-900">
+    <div
+      className={clsx(
+        `cursor-pointer text-sm  transition ease-in-out hover:text-gray-900`,
+        isSelected ? `font-bold text-blue-500` : `text-gray-500`
+      )}
+    >
       <Link href={route} className="block w-full px-4 py-2">
         {label}
       </Link>
