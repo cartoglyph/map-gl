@@ -8,6 +8,7 @@ export const Route = {
   Popup: "/example/popup",
   BBoxTool: "/example/bbox-tool",
   DrawPolygonTool: "/example/draw-polygon-tool",
+  Theme: "/example/theme",
 } as const;
 
 /** A schema for all valid routes */
@@ -67,5 +68,14 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     type: "link",
     label: "DrawPolygonTool",
     route: Route.DrawPolygonTool,
+  },
+  {
+    type: "heading",
+    heading: "Style",
+  },
+  {
+    type: "link",
+    label: "theme",
+    route: Route.Theme,
   },
 ];

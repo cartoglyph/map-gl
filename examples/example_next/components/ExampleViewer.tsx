@@ -1,6 +1,6 @@
 "use client";
 import { Route, RouteEnum, RouteSchema } from "@/types";
-import { MapProvider } from "@dimapio/map-gl";
+import { MapProvider, MapTheme } from "@dimapio/map-gl";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 
@@ -15,21 +15,36 @@ const EXAMPLES: Record<RouteEnum, React.ComponentType> = {
   [Route.DrawPolygonTool]: dynamic(
     () => import("@/components/examples/DrawPolygonToolExample")
   ),
+  [Route.Theme]: dynamic(() => import("@/components/examples/ThemeExample")),
+};
+
+const THEMES: Partial<Record<RouteEnum, MapTheme>> = {
+  [Route.Theme]: {
+    BBoxTool: {
+      bboxStyle: {
+        border: "1px solid blue",
+        backgroundColor: "red",
+        opacity: 0.5,
+      },
+    },
+  },
 };
 
 function useExample() {
   const pathname = usePathname();
   const routeResult = RouteSchema.safeParse(pathname);
   if (routeResult.success) {
-    return EXAMPLES[routeResult.data];
+    const Component = EXAMPLES[routeResult.data];
+    const theme = THEMES[routeResult.data];
+    return { Component, theme };
   }
-  return null;
+  return {};
 }
 
 const ExampleViewer = () => {
-  const Component = useExample();
+  const { Component, theme } = useExample();
   return (
-    <MapProvider>
+    <MapProvider theme={theme}>
       {Component ? <Component /> : <div>Example does not exist!</div>}
     </MapProvider>
   );

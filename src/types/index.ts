@@ -15,3 +15,7 @@ export type PopupEvent = {
 export type LayerOptions = mapboxgl.AnyLayer & {
   beforeId?: string;
 };
+export type BBoxStyle = Omit<
+  React.CSSProperties,
+  "position" | "top" | "left" | "width" | "height"
+>;

@@ -1,13 +1,8 @@
 import React from "react";
 import { useInnerMap } from "./Map";
-import { useMapEvent } from "@/hooks";
+import { useComponentTheme, useMapEvent } from "@/hooks";
 import mapboxgl from "mapbox-gl";
-import { MapLayerEvent } from "@/types";
-
-type BBoxStyle = Omit<
-  React.CSSProperties,
-  "position" | "top" | "left" | "width" | "height"
->;
+import { BBoxStyle, MapLayerEvent } from "@/types";
 
 function getPoint(map: mapboxgl.Map, e: MapLayerEvent): mapboxgl.Point {
   const canvas = map.getCanvasContainer();
@@ -28,6 +23,12 @@ type BBoxToolProps = {
 };
 const BBoxTool: React.FC<BBoxToolProps> = ({ disabled, bboxStyle, onBBox }) => {
   const [map] = useInnerMap();
+
+  // Handle component theme
+  const theme = useComponentTheme("BBoxTool", { bboxStyle });
+  const themeRef = React.useRef(theme);
+  themeRef.current = theme;
+
   const pointsRef = React.useRef<mapboxgl.Point[]>([]);
   const bboxRef = React.useRef<HTMLDivElement>();
   const [isMouseDown, setIsMouseDown] = React.useState<boolean>(false);
@@ -79,9 +80,11 @@ const BBoxTool: React.FC<BBoxToolProps> = ({ disabled, bboxStyle, onBBox }) => {
         bbox.style.height = "0";
 
         // Apply custom style
-        Object.entries(bboxStyle || {}).forEach(([property, value]) => {
-          bbox.style[property] = String(value);
-        });
+        Object.entries(themeRef.current?.bboxStyle || {}).forEach(
+          ([property, value]) => {
+            bbox.style[property] = String(value);
+          }
+        );
 
         const canvas = map.getCanvasContainer();
         canvas.appendChild(bbox);
