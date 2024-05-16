@@ -1,5 +1,5 @@
 import ExampleViewer from "@/components/ExampleViewer";
-import { Route } from "@/types";
+import { ExampleRoutes } from "@/types";
 
 export default function ExamplePage() {
   return (
@@ -10,10 +10,8 @@ export default function ExamplePage() {
 }
 
 export function generateStaticParams() {
-  return Object.values(Route)
-    .filter((route) => route.startsWith("/example"))
-    .map((route) => {
-      const example = route.replace("/example", "").replace("/", "");
-      return { example };
-    });
+  console.log(Object.values(ExampleRoutes));
+  return Object.values(ExampleRoutes).map((route) => ({
+    example: route.replace("/example/", ""),
+  }));
 }

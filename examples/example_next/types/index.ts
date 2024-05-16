@@ -1,7 +1,7 @@
 import z from "zod";
 
-/** All valid routes */
-export const Route = {
+/** All example routes */
+export const ExampleRoutes = {
   Map: "/example/map",
   Source: "/example/source",
   Layer: "/example/layer",
@@ -11,17 +11,17 @@ export const Route = {
   Theme: "/example/theme",
 } as const;
 
-/** A schema for all valid routes */
-export const RouteSchema = z.nativeEnum(Route);
+/** A schema for all example routes */
+export const ExampleRouteSchema = z.nativeEnum(ExampleRoutes);
 
 /** A valid route */
-export type RouteEnum = (typeof Route)[keyof typeof Route];
+export type ExampleRoute = z.infer<typeof ExampleRouteSchema>;
 
 /** A sidebar link */
 export type LinkItem = {
   type: "link";
   label: string;
-  route: RouteEnum;
+  route: ExampleRoute;
 };
 
 /** A sidebar heading */
@@ -42,32 +42,32 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
   {
     type: "link",
     label: "Map",
-    route: Route.Map,
+    route: ExampleRoutes.Map,
   },
   {
     type: "link",
     label: "Source",
-    route: Route.Source,
+    route: ExampleRoutes.Source,
   },
   {
     type: "link",
     label: "Layer",
-    route: Route.Layer,
+    route: ExampleRoutes.Layer,
   },
   {
     type: "link",
     label: "Popup",
-    route: Route.Popup,
+    route: ExampleRoutes.Popup,
   },
   {
     type: "link",
     label: "BBoxTool",
-    route: Route.BBoxTool,
+    route: ExampleRoutes.BBoxTool,
   },
   {
     type: "link",
     label: "DrawPolygonTool",
-    route: Route.DrawPolygonTool,
+    route: ExampleRoutes.DrawPolygonTool,
   },
   {
     type: "heading",
@@ -76,6 +76,6 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
   {
     type: "link",
     label: "theme",
-    route: Route.Theme,
+    route: ExampleRoutes.Theme,
   },
 ];

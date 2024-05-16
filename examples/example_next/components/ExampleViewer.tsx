@@ -1,25 +1,36 @@
 "use client";
-import { Route, RouteEnum, RouteSchema } from "@/types";
+
+import { ExampleRoute, ExampleRouteSchema, ExampleRoutes } from "@/types";
 import { MapProvider, MapTheme } from "@dimapio/map-gl";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 
-const EXAMPLES: Record<RouteEnum, React.ComponentType> = {
-  [Route.Map]: dynamic(() => import("@/components/examples/MapExample")),
-  [Route.Source]: dynamic(() => import("@/components/examples/MapExample")),
-  [Route.Layer]: dynamic(() => import("@/components/examples/LayerExample")),
-  [Route.Popup]: dynamic(() => import("@/components/examples/PopupExample")),
-  [Route.BBoxTool]: dynamic(
+const EXAMPLES: Record<ExampleRoute, React.ComponentType> = {
+  [ExampleRoutes.Map]: dynamic(
+    () => import("@/components/examples/MapExample")
+  ),
+  [ExampleRoutes.Source]: dynamic(
+    () => import("@/components/examples/MapExample")
+  ),
+  [ExampleRoutes.Layer]: dynamic(
+    () => import("@/components/examples/LayerExample")
+  ),
+  [ExampleRoutes.Popup]: dynamic(
+    () => import("@/components/examples/PopupExample")
+  ),
+  [ExampleRoutes.BBoxTool]: dynamic(
     () => import("@/components/examples/BBoxToolExample")
   ),
-  [Route.DrawPolygonTool]: dynamic(
+  [ExampleRoutes.DrawPolygonTool]: dynamic(
     () => import("@/components/examples/DrawPolygonToolExample")
   ),
-  [Route.Theme]: dynamic(() => import("@/components/examples/ThemeExample")),
+  [ExampleRoutes.Theme]: dynamic(
+    () => import("@/components/examples/ThemeExample")
+  ),
 };
 
-const THEMES: Partial<Record<RouteEnum, MapTheme>> = {
-  [Route.Theme]: {
+const THEMES: Partial<Record<ExampleRoute, MapTheme>> = {
+  [ExampleRoutes.Theme]: {
     BBoxTool: {
       bboxStyle: {
         border: "1px solid blue",
@@ -32,7 +43,7 @@ const THEMES: Partial<Record<RouteEnum, MapTheme>> = {
 
 function useExample() {
   const pathname = usePathname();
-  const routeResult = RouteSchema.safeParse(pathname);
+  const routeResult = ExampleRouteSchema.safeParse(pathname);
   if (routeResult.success) {
     const Component = EXAMPLES[routeResult.data];
     const theme = THEMES[routeResult.data];
