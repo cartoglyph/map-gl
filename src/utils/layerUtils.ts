@@ -2,6 +2,7 @@ import mapboxgl from "mapbox-gl";
 import { LayerOptions } from "@/types";
 import deepEqual from "./deepEqual";
 
+// TODO: Update these to combine `options` and `beforeId` with custom `LayerOptions` type
 /** Get a `Layer` from the map or create one  */
 export function createLayer(
   map: mapboxgl.Map,
@@ -79,4 +80,24 @@ export function updateLayer(
   ) {
     map.setLayerZoomRange(id, minzoom, maxzoom);
   }
+}
+
+/** Sync layers within the map */
+export function syncLayers(
+  map: mapboxgl.Map,
+  layers: Record<string, LayerOptions>
+) {
+  // Add map layers with expected layers
+  Object.values(layers).forEach(({ beforeId, ...options }) => {
+    createLayer(map, options, beforeId);
+  });
+
+  // Remove map layers that are not expected
+  const currentLayers = map.getStyle().layers;
+  const layerIds = Object.keys(layers);
+  currentLayers.forEach((layer) => {
+    if (!layerIds.includes(layer.id)) {
+      removeLayer(map, layer);
+    }
+  });
 }

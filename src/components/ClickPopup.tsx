@@ -1,9 +1,8 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import mapboxgl from "mapbox-gl";
-import { useLayerEvent } from "@/hooks";
+import { useLayerEvent, useMap } from "@/hooks";
 import { PopupEvent } from "@/types";
-import { useInnerMap } from "./Map";
 
 const DefaultPopupOptions: Partial<mapboxgl.PopupOptions> = {
   closeButton: false,
@@ -18,7 +17,7 @@ const ClickPopup: React.FC<ClickPopupProps> = ({
   options,
   children,
 }) => {
-  const [map] = useInnerMap();
+  const map = useMap();
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const [event, setEvent] = React.useState<PopupEvent | null>(null);
 

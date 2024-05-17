@@ -1,9 +1,6 @@
 import React from "react";
 import mapboxgl from "mapbox-gl";
 import isValidPolygon from "@turf/boolean-valid";
-import { useComponentTheme, useLayerEvent, useMapEvent } from "@/hooks";
-import { useInnerMap } from "./Map";
-import Source from "./Source";
 import {
   FeatureCollection,
   Feature,
@@ -12,6 +9,8 @@ import {
   Point,
   Polygon,
 } from "geojson";
+import { useComponentTheme, useLayerEvent, useMap, useMapEvent } from "@/hooks";
+import Source from "./Source";
 import Layer from "./Layer";
 
 // https://docs.mapbox.com/mapbox-gl-js/example/geojson-line/
@@ -35,7 +34,7 @@ const DrawPolygonTool: React.FC<DrawPolygonToolProps> = ({
   linePaint,
   circlePaint,
 }) => {
-  const [map] = useInnerMap();
+  const map = useMap();
   const theme = useComponentTheme("DrawPolygonTool", {
     fillPaint,
     lineLayout,

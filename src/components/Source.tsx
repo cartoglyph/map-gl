@@ -1,37 +1,44 @@
 import React from "react";
 import mapboxgl from "mapbox-gl";
-import { useInnerMap, useInnerSources } from "./Map";
-import { updateSource } from "@/utils/sourceUtils";
+import { useMapStore } from "@/store/mapStore";
 
 type SourceProps = {
   id: string;
   options: mapboxgl.AnySourceData;
 };
-const Source: React.FC<SourceProps> = ({ id, options }) => {
-  const [map] = useInnerMap();
-  const [_sources, setSources] = useInnerSources();
-  const prevPropsRef = React.useRef<mapboxgl.AnySourceData>(options);
-  prevPropsRef.current = options;
+const Source: React.FC<SourceProps> = (props) => {
+  const { id, options } = props;
+  const mapStore = useMapStore(
+    ({ addSource, removeSource, updateSource, map }) => ({
+      addSource,
+      removeSource,
+      updateSource,
+      map,
+    })
+  );
+
+  const prevPropsRef = React.useRef<SourceProps>(props);
+  prevPropsRef.current = props;
 
   // Handle mount
   React.useEffect(() => {
-    if (!map) return;
-    setSources((prev) => ({ ...prev, [id]: options }));
-  }, [map, id]);
-  // Handle unmount
-  React.useEffect(() => {
+    mapStore.addSource(id, options);
+
+    // Handle unmount
     return () => {
-      setSources((prev) => {
-        delete prev[id];
-        return { ...prev };
-      });
+      mapStore.removeSource(id);
     };
   }, []);
+
   // Handle update
   React.useEffect(() => {
-    if (!map) return;
-    updateSource(map, id, options, prevPropsRef.current);
-  }, [map, id, options]);
+    mapStore.updateSource(
+      id,
+      options,
+      prevPropsRef.current.id,
+      prevPropsRef.current.options
+    );
+  }, [id, options]);
 
   return null;
 };

@@ -1,8 +1,7 @@
 import React from "react";
-import { useInnerLayers, useInnerMap } from "./Map";
-import { updateLayer } from "@/utils/layerUtils";
 import { LayerOptions } from "@/types";
 import { useLayerEvent } from "@/hooks";
+import { useMapStore } from "@/store/mapStore";
 
 type LayerProps = {
   /** Layer options from mapbox-gl */
@@ -18,8 +17,15 @@ type LayerProps = {
 };
 const Layer: React.FC<LayerProps> = (props) => {
   const { options, beforeId, hover = false, hoverCursor, click } = props;
-  const [map] = useInnerMap();
-  const [_layers, setLayers] = useInnerLayers();
+  const mapStore = useMapStore(
+    ({ addLayer, removeLayer, updateLayer, map }) => ({
+      addLayer,
+      removeLayer,
+      updateLayer,
+      map,
+    })
+  );
+
   const propsRef = React.useRef<LayerProps>(props);
   propsRef.current = props;
   const prevPropsRef = React.useRef<LayerOptions>({ ...options, beforeId });
@@ -33,37 +39,26 @@ const Layer: React.FC<LayerProps> = (props) => {
 
   // Handle mount
   React.useEffect(() => {
-    if (!map) return;
-    setLayers((prev) => ({ ...prev, [options.id]: { ...options, beforeId } }));
-  }, [map]);
-  // Handle unmount
-  React.useEffect(() => {
+    mapStore.addLayer({ ...options, beforeId });
+
+    // Handle unmount
     return () => {
-      setLayers((prev) => {
-        delete prev[options.id];
-        return { ...prev };
-      });
+      mapStore.removeLayer(options.id);
     };
   }, []);
+
   // Handle update
   React.useEffect(() => {
-    if (!map) return;
-    updateLayer(
-      map,
-      options.id,
-      { ...options, beforeId },
-      prevPropsRef.current
-    );
-    prevPropsRef.current = { ...options, beforeId };
-  }, [map, options, beforeId]);
+    mapStore.updateLayer({ ...options, beforeId }, prevPropsRef.current);
+  }, [options, beforeId]);
+
   // Handle 'hover' feature state
   useLayerEvent({
-    map,
+    map: mapStore.map,
     type: "mouseenter",
     layerId: options.id,
     disabled: !hover,
     callback: (e) => {
-      if (!map) return;
       const features = e.features || [];
       features.forEach((feature) => {
         if (!feature.id) {
@@ -73,58 +68,67 @@ const Layer: React.FC<LayerProps> = (props) => {
           return;
         }
         hoveredFeatureIdsRef.current.set(feature.id, feature.source);
-        map.setFeatureState(
-          { id: feature.id, source: feature.source },
-          { hover: true }
-        );
+        if (mapStore.map) {
+          mapStore.map.setFeatureState(
+            { id: feature.id, source: feature.source },
+            { hover: true }
+          );
+        }
       });
     },
   });
   useLayerEvent({
-    map,
+    map: mapStore.map,
     type: "mouseleave",
     layerId: options.id,
     disabled: !hover,
     callback: () => {
-      if (!map) return;
-      for (const [
-        featureId,
-        source,
-      ] of hoveredFeatureIdsRef.current.entries()) {
-        map.setFeatureState({ id: featureId, source }, { hover: false });
-      }
-      hoveredFeatureIdsRef.current.clear();
-      if (hoverCursor) {
-        map.getCanvas().style.cursor = "";
+      if (mapStore.map) {
+        for (const [
+          featureId,
+          source,
+        ] of hoveredFeatureIdsRef.current.entries()) {
+          mapStore.map.setFeatureState(
+            { id: featureId, source },
+            { hover: false }
+          );
+        }
+        hoveredFeatureIdsRef.current.clear();
+        if (hoverCursor) {
+          mapStore.map.getCanvas().style.cursor = "";
+        }
       }
     },
   });
   // Handle cursor
   useLayerEvent({
-    map,
+    map: mapStore.map,
     type: "mouseover",
     layerId: options.id,
     disabled: !hoverCursor,
     callback: () => {
-      if (!map || !propsRef.current.hoverCursor) return;
-      map.getCanvas().style.cursor = propsRef.current.hoverCursor;
+      if (!mapStore.map || !propsRef.current.hoverCursor) return;
+      mapStore.map.getCanvas().style.cursor = propsRef.current.hoverCursor;
     },
   });
   // Handle click
   useLayerEvent({
-    map,
+    map: mapStore.map,
     type: "click",
     layerId: options.id,
     disabled: !click,
     callback: (e) => {
-      if (!map) return;
+      if (!mapStore.map) return;
 
       // Clear existing 'click' feature states
       for (const [
         featureId,
         source,
       ] of clickedFeatureIdsRef.current.entries()) {
-        map.setFeatureState({ id: featureId, source }, { click: false });
+        mapStore.map.setFeatureState(
+          { id: featureId, source },
+          { click: false }
+        );
       }
       clickedFeatureIdsRef.current.clear();
 
@@ -138,10 +142,12 @@ const Layer: React.FC<LayerProps> = (props) => {
           return;
         }
         clickedFeatureIdsRef.current.set(feature.id, feature.source);
-        map.setFeatureState(
-          { id: feature.id, source: feature.source },
-          { click: true }
-        );
+        if (mapStore.map) {
+          mapStore.map.setFeatureState(
+            { id: feature.id, source: feature.source },
+            { click: true }
+          );
+        }
       });
     },
   });

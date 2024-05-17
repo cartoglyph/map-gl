@@ -1,10 +1,9 @@
 import React from "react";
 import mapboxgl from "mapbox-gl";
-import { Provider } from "jotai";
-import { useInnerLayers, useInnerMap, useInnerSources } from "./Map.hooks";
-import { innerMapStore } from "./Map.store";
-import { useMaps } from "@/hooks";
+import MapProvider from "@/providers/MapProvider";
+import { useMapStore } from "@/store/mapStore";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { useGlobalStore } from "@/store/globalStore";
 
 export type MapProps = {
   /** Unique ID for the map */
@@ -35,10 +34,8 @@ const InnerMap: React.FC<MapProps> = ({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const loadedRef = React.useRef<boolean>(false);
   const resizeObserverRef = React.useRef<ResizeObserver>();
-  const [_maps, setMaps] = useMaps();
-  const [_innerMap, setInnerMap] = useInnerMap();
-  const [_innerSources, setInnerSources] = useInnerSources();
-  const [_innerLayers, setInnerLayers] = useInnerLayers();
+  const globalStore = useGlobalStore((store) => store);
+  const mapStore = useMapStore((store) => store);
 
   // Mount the map into the container
   React.useEffect(() => {
@@ -55,52 +52,39 @@ const InnerMap: React.FC<MapProps> = ({
       ...{ ...DefaultMapOptions, ...options },
     });
 
-    map.on("load", (e) => {
-      const mapRef = e.target;
-      const sources = mapRef.getStyle().sources;
-      const layers = mapRef.getStyle().layers;
-      const currentLayers = layers.reduce(
-        (acc, curr) => ({ ...acc, [curr.id]: curr }),
-        {}
-      );
+    // Handle map load event
+    map.on("load", () => {
+      // Check if we have the map container reference
+      if (!containerRef.current) return;
 
-      // Add map to global context & inner context
-      setMaps((prev) => ({ ...prev, [id]: mapRef }));
-      setInnerSources((prev) => ({ ...prev, ...sources }));
-      setInnerLayers((prev) => ({ ...prev, ...currentLayers }));
-      setInnerMap(mapRef);
+      // If global store exists, add map
+      if (globalStore) {
+        globalStore.addMap(id, map);
+      }
+
+      // Initialize map store
+      mapStore.init(map);
 
       // Setup resize observer to resize the map when the dom changes
-      if (!containerRef.current) {
-        console.warn("Missing container after map has loaded");
-      } else {
-        let timer: NodeJS.Timeout;
-        const resizeObserver = new ResizeObserver(() => {
-          // debounce map resize
-          if (timer) clearTimeout(timer);
-          timer = setTimeout(() => {
-            try {
-              mapRef.resize();
-            } catch (err) {
-              /** ignore error */
-            }
-          }, 100);
-        });
-        resizeObserver.observe(containerRef.current);
-        resizeObserverRef.current = resizeObserver;
-      }
+      resizeObserverRef.current = createMapResizeObserver(
+        map,
+        containerRef.current
+      );
     });
   }, [id, options]);
 
   // Handle unmount
   React.useEffect(() => {
     return () => {
-      // Cleanup map reference and resize observer
-      setMaps((prev) => {
-        delete prev[id];
-        return { ...prev };
-      });
-      setInnerMap(null);
+      // Cleanup global map reference
+      if (globalStore) {
+        globalStore.removeMap(id);
+      }
+
+      // Cleanup map reference
+      mapStore.unload();
+
+      // Disconnect resize observer
       resizeObserverRef.current?.disconnect();
     };
   }, []);
@@ -115,10 +99,32 @@ const InnerMap: React.FC<MapProps> = ({
 /** A dimapio map-gl map */
 const Map: React.FC<MapProps> = (props) => {
   return (
-    <Provider store={innerMapStore}>
+    <MapProvider>
       <InnerMap {...props} />
-    </Provider>
+    </MapProvider>
   );
 };
 
 export default Map;
+
+// TODO: we might be able to use `map.getContainer` instead of passing the container
+/** Create a resize observer to resize the map */
+function createMapResizeObserver(
+  map: mapboxgl.Map,
+  container: HTMLDivElement
+): ResizeObserver {
+  let timer: NodeJS.Timeout;
+  const resizeObserver = new ResizeObserver(() => {
+    // debounce map resize
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      try {
+        map.resize();
+      } catch (err) {
+        /** ignore error */
+      }
+    }, 100);
+  });
+  resizeObserver.observe(container);
+  return resizeObserver;
+}

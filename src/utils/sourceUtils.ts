@@ -78,3 +78,23 @@ export function updateSource(
     }
   }
 }
+
+/** Sync sources within the map */
+export function syncSources(
+  map: mapboxgl.Map,
+  sources: Record<string, mapboxgl.AnySourceData>
+) {
+  // Add map sources that are from the atom
+  Object.entries(sources).forEach(([id, options]) => {
+    createSource(map, id, options);
+  });
+
+  // Remove map sources that do not exist in the atom
+  const currentSources = map.getStyle().sources;
+  const sourceIds = Object.keys(sources);
+  Object.keys(currentSources).forEach((id) => {
+    if (!sourceIds.includes(id)) {
+      removeSource(map, id);
+    }
+  });
+}

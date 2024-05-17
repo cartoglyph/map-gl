@@ -1,7 +1,7 @@
 "use client";
 
 import { ExampleRoute, ExampleRouteSchema, ExampleRoutes } from "@/types";
-import { MapProvider, MapTheme } from "@dimapio/map-gl";
+import { GlobalProvider, MapTheme } from "@dimapio/map-gl";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 
@@ -55,9 +55,9 @@ function useExample() {
 const ExampleViewer = () => {
   const { Component, theme } = useExample();
   return (
-    <MapProvider theme={theme}>
+    <GlobalProvider theme={theme}>
       {Component ? <Component /> : <div>Example does not exist!</div>}
-    </MapProvider>
+    </GlobalProvider>
   );
 };
 

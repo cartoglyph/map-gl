@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@turf/boolean-valid": "^6.5.0",
-    "jotai": "^2.6.4",
-    "mapbox-gl": "^3.3.0"
+    "mapbox-gl": "^3.3.0",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/geojson": "^7946.0.14",
@@ -24,7 +24,6 @@
     "@types/node": "^20.12.12",
     "nodemon": "^3.1.0",
     "prettier": "^3.2.5",
-    "prettier-plugin-tailwindcss": "^0.5.14",
     "tsc-alias": "^1.8.10",
     "typescript": "^5.4.5"
   },

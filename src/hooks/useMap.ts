@@ -1,11 +1,20 @@
-import { useAtomValue } from "jotai";
+import React from "react";
 import mapboxgl from "mapbox-gl";
-import store, { globalStore } from "@/store";
+import { useStore } from "zustand";
+import { useGlobalStore } from "@/store/globalStore";
+import { MapStoreContext, useMapStore } from "@/store/mapStore";
 
 /** Get a map-gl map reference */
-const useMap = (id: string): mapboxgl.Map | null => {
-  const maps = useAtomValue(store.maps.mapsAtom, { store: globalStore });
-  return maps[id] || null;
+const useMap = (mapId?: string): mapboxgl.Map | null => {
+  const maps = useGlobalStore((store) => store.maps);
+  const mapStoreContext = React.useContext(MapStoreContext);
+  const map = mapStoreContext
+    ? useStore(mapStoreContext, (store) => store.map)
+    : null;
+  if (mapId && maps && maps[mapId]) {
+    return maps[mapId];
+  }
+  return map;
 };
 
 export default useMap;

@@ -1,7 +1,6 @@
 import React from "react";
-import { useInnerMap } from "./Map";
-import { useComponentTheme, useMapEvent } from "@/hooks";
 import mapboxgl from "mapbox-gl";
+import { useComponentTheme, useMap, useMapEvent } from "@/hooks";
 import { BBoxStyle, MapLayerEvent } from "@/types";
 
 function getPoint(map: mapboxgl.Map, e: MapLayerEvent): mapboxgl.Point {
@@ -22,7 +21,7 @@ type BBoxToolProps = {
   onBBox: (bbox: [mapboxgl.Point, mapboxgl.Point]) => void;
 };
 const BBoxTool: React.FC<BBoxToolProps> = ({ disabled, bboxStyle, onBBox }) => {
-  const [map] = useInnerMap();
+  const map = useMap();
 
   // Handle component theme
   const theme = useComponentTheme("BBoxTool", { bboxStyle });
