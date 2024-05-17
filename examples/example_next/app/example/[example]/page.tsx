@@ -10,7 +10,6 @@ export default function ExamplePage() {
 }
 
 export function generateStaticParams() {
-  console.log(Object.values(ExampleRoutes));
   return Object.values(ExampleRoutes).map((route) => ({
     example: route.replace("/example/", ""),
   }));
