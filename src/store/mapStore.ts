@@ -43,15 +43,22 @@ export function createMapStore() {
     ...defaultMapState,
     init: (map) => {
       const style = map.getStyle();
-      const layers = style.layers.reduce(
+      const currSources = style.sources;
+      const currLayers = style.layers.reduce(
         (acc, curr) => ({ ...acc, [curr.id]: curr }),
         {}
       );
-      set((state) => ({
-        map,
-        sources: style.sources,
-        layers: { ...state.layers, ...layers },
-      }));
+      set((state) => {
+        const sources = { ...state.sources, ...currSources };
+        const layers = { ...state.layers, ...currLayers };
+        syncSources(map, sources);
+        syncLayers(map, layers);
+        return {
+          map,
+          sources,
+          layers,
+        };
+      });
     },
     unload: () => set(defaultMapState),
     addLayer: (layer) => {
