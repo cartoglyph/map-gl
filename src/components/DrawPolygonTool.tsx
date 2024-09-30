@@ -1,5 +1,4 @@
 import React from "react";
-import mapboxgl from "mapbox-gl";
 import isValidPolygon from "@turf/boolean-valid";
 import {
   FeatureCollection,
@@ -19,10 +18,10 @@ type DrawPolygonToolProps = {
   disabled?: boolean;
   onPolygon: (polygon: Feature<Polygon>) => void;
   onInvalid?: () => void;
-  fillPaint?: mapboxgl.FillPaint;
-  lineLayout?: mapboxgl.LineLayout;
-  linePaint?: mapboxgl.LinePaint;
-  circlePaint?: mapboxgl.CirclePaint;
+  fillPaint?: mapboxgl.FillLayerSpecification["paint"];
+  lineLayout?: mapboxgl.FillLayerSpecification["layout"];
+  linePaint?: mapboxgl.LineLayerSpecification["paint"];
+  circlePaint?: mapboxgl.CircleLayerSpecification["paint"];
 };
 const DrawPolygonTool: React.FC<DrawPolygonToolProps> = ({
   id,

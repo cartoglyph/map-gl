@@ -15,10 +15,10 @@ export type MapProps = {
   /** Children map layers */
   children?: React.ReactNode;
   /** Mapbox options */
-  options?: Omit<mapboxgl.MapboxOptions, "container">;
+  options?: Omit<mapboxgl.MapOptions, "container">;
 };
 
-const DefaultMapOptions: Partial<mapboxgl.MapboxOptions> = {
+const DefaultMapOptions: Partial<mapboxgl.MapOptions> = {
   style: "mapbox://styles/mapbox/streets-v12",
   center: [-74.5, 40],
   zoom: 9,

@@ -1,9 +1,8 @@
 import React from "react";
 import { StoreApi, createStore, useStore } from "zustand";
 import { LayerOptions } from "@/types";
-import mapboxgl from "mapbox-gl";
-import { removeLayer, syncLayers } from "@/utils/layerUtils";
-import { removeSource, syncSources } from "@/utils/sourceUtils";
+import { removeLayer, syncLayers, updateLayer } from "@/utils/layerUtils";
+import { removeSource, syncSources, updateSource } from "@/utils/sourceUtils";
 
 type MapState = {
   map: mapboxgl.Map | null;
@@ -20,13 +19,13 @@ type MapActions = {
   removeLayer: (layerId: string) => void;
   updateLayer: (layer: LayerOptions, prevLayer: LayerOptions) => void;
   // Source actions
-  addSource: (sourceId: string, source: mapboxgl.AnySourceData) => void;
+  addSource: (sourceId: string, source: mapboxgl.SourceSpecification) => void;
   removeSource: (sourceId: string) => void;
   updateSource: (
     sourceId: string,
-    source: mapboxgl.AnySourceData,
+    source: mapboxgl.SourceSpecification,
     prevSourceId: string,
-    prevSource: mapboxgl.AnySourceData
+    prevSource: mapboxgl.SourceSpecification
   ) => void;
 };
 
@@ -87,19 +86,19 @@ export function createMapStore() {
     },
     updateLayer: (layer, prevLayer) => {
       set(({ map, layers }) => {
+        // Check if layer id changed
         if (layer.id !== prevLayer.id) {
           delete layers[prevLayer.id];
-
-          // If id changed, remove old layer from map
           if (map) {
             removeLayer(map, prevLayer);
           }
         }
-        layers[layer.id] = layer;
 
         // Sync layers with map
+        layers[layer.id] = layer;
         if (map) {
           syncLayers(map, layers);
+          updateLayer(map, layer.id, layer, prevLayer);
         }
 
         return { layers };
@@ -131,19 +130,19 @@ export function createMapStore() {
     },
     updateSource: (sourceId, source, prevSourceId, prevSource) => {
       set(({ map, sources }) => {
+        // Check if source id changed
         if (sourceId !== prevSourceId) {
           delete sources[prevSourceId];
-
-          // If id changed, remove old source from map
           if (map) {
             removeSource(map, prevSourceId);
           }
         }
-        sources[sourceId] = source;
 
         // Sync layers with map
+        sources[sourceId] = source;
         if (map) {
           syncSources(map, sources);
+          updateSource(map, sourceId, source, prevSource);
         }
 
         return { sources };

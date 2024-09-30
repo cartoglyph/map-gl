@@ -5,7 +5,7 @@ import { useMapStore } from "@/store/mapStore";
 
 type LayerProps = {
   /** Layer options from mapbox-gl */
-  options: mapboxgl.AnyLayer;
+  options: mapboxgl.LayerSpecification;
   /** Id to put this layer before */
   beforeId?: string;
   /** Enables the 'hover' feature state */
