@@ -1,11 +1,9 @@
-import mapboxgl from "mapbox-gl";
-
 /** Get a `Source` from the map or create one  */
 export function createSource(
   map: mapboxgl.Map,
   sourceId: string,
-  options: mapboxgl.AnySourceData
-): mapboxgl.AnySourceImpl {
+  options: mapboxgl.SourceSpecification
+): mapboxgl.Source | undefined {
   const source = map.getSource(sourceId);
   if (source) return source;
   map.addSource(sourceId, options);
@@ -19,7 +17,7 @@ export function removeSource(map: mapboxgl.Map, sourceId: string) {
   if (!source) return;
 
   // Remove all layers for this source
-  const layers = map.getStyle().layers;
+  const layers = map.getStyle()?.layers || [];
   layers.forEach((layer) => {
     if ("source" in layer && layer.source === sourceId) {
       map.removeLayer(layer.id);
@@ -34,8 +32,8 @@ export function removeSource(map: mapboxgl.Map, sourceId: string) {
 export function updateSource(
   map: mapboxgl.Map,
   id: string,
-  props: mapboxgl.AnySourceData,
-  prevProps: mapboxgl.AnySourceData
+  props: mapboxgl.SourceSpecification,
+  prevProps: mapboxgl.SourceSpecification
 ) {
   const source = map.getSource(id);
   if (!source) return;
@@ -53,7 +51,11 @@ export function updateSource(
         source.setData(props.data);
       }
     }
-  } else if (source.type === "image" && props.type === "image") {
+  } else if (
+    source.type === "image" &&
+    props.type === "image" &&
+    typeof props.url === "string"
+  ) {
     source.updateImage({
       url: props.url,
       coordinates: props.coordinates,
@@ -82,7 +84,7 @@ export function updateSource(
 /** Sync sources within the map */
 export function syncSources(
   map: mapboxgl.Map,
-  sources: Record<string, mapboxgl.AnySourceData>
+  sources: Record<string, mapboxgl.SourceSpecification>
 ) {
   // Add map sources that are from the atom
   Object.entries(sources).forEach(([id, options]) => {
@@ -90,7 +92,7 @@ export function syncSources(
   });
 
   // Remove map sources that do not exist in the atom
-  const currentSources = map.getStyle().sources;
+  const currentSources = map.getStyle()?.sources || {};
   const sourceIds = Object.keys(sources);
   Object.keys(currentSources).forEach((id) => {
     if (!sourceIds.includes(id)) {

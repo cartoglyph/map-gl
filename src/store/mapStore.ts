@@ -43,8 +43,8 @@ export function createMapStore() {
     ...defaultMapState,
     init: (map) => {
       const style = map.getStyle();
-      const currSources = style.sources;
-      const currLayers = style.layers.reduce(
+      const currSources = style?.sources || {};
+      const currLayers = (style?.layers || []).reduce(
         (acc, curr) => ({ ...acc, [curr.id]: curr }),
         {}
       );

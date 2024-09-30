@@ -1,10 +1,9 @@
 import React from "react";
-import mapboxgl from "mapbox-gl";
-import { MapEventCallback, MapLayerEventType } from "@/types";
+import { MapEventCallback } from "@/types";
 
 type UseMapLayerParams = {
   map: mapboxgl.Map | null;
-  type: MapLayerEventType;
+  type: mapboxgl.MapEventType;
   layerId: string;
   disabled?: boolean;
   callback: MapEventCallback;

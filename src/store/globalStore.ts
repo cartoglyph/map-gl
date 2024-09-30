@@ -1,4 +1,3 @@
-import mapboxgl from "mapbox-gl";
 import React from "react";
 import { StoreApi, createStore, useStore } from "zustand";
 import { DefaultTheme, MapTheme } from "@/theme";
