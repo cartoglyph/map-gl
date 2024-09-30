@@ -1,10 +1,8 @@
-import mapboxgl from "mapbox-gl";
-
 export type DrawPolygonToolTheme = {
-  fillPaint?: mapboxgl.FillPaint;
-  lineLayout?: mapboxgl.LineLayout;
-  linePaint?: mapboxgl.LinePaint;
-  circlePaint?: mapboxgl.CirclePaint;
+  fillPaint?: mapboxgl.FillLayerSpecification["paint"];
+  lineLayout?: mapboxgl.LineLayerSpecification["layout"];
+  linePaint?: mapboxgl.LineLayerSpecification["paint"];
+  circlePaint?: mapboxgl.CircleLayerSpecification["paint"];
 };
 
 export const DefaultDrawPolygonToolTheme: DrawPolygonToolTheme = {

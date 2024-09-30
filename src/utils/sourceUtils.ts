@@ -86,7 +86,7 @@ export function syncSources(
   map: mapboxgl.Map,
   sources: Record<string, mapboxgl.SourceSpecification>
 ) {
-  // Add map sources that are from the atom
+  // Add map sources from the sources
   Object.entries(sources).forEach(([id, options]) => {
     createSource(map, id, options);
   });
