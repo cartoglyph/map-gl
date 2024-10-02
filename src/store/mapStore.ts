@@ -3,29 +3,30 @@ import { StoreApi, createStore, useStore } from "zustand";
 import { LayerOptions } from "@/types";
 import { removeLayer, syncLayers, updateLayer } from "@/utils/layerUtils";
 import { removeSource, syncSources, updateSource } from "@/utils/sourceUtils";
+import { Map, SourceSpecification } from "mapbox-gl";
 
 type MapState = {
-  map: mapboxgl.Map | null;
-  sources: Record<string, mapboxgl.AnySourceData>;
+  map: Map | null;
+  sources: Record<string, SourceSpecification>;
   layers: Record<string, LayerOptions>;
 };
 
 type MapActions = {
   // Map actions
-  init: (map: mapboxgl.Map) => void;
+  init: (map: Map) => void;
   unload: () => void;
   // Layer actions
   addLayer: (layer: LayerOptions) => void;
   removeLayer: (layerId: string) => void;
   updateLayer: (layer: LayerOptions, prevLayer: LayerOptions) => void;
   // Source actions
-  addSource: (sourceId: string, source: mapboxgl.SourceSpecification) => void;
+  addSource: (sourceId: string, source: SourceSpecification) => void;
   removeSource: (sourceId: string) => void;
   updateSource: (
     sourceId: string,
-    source: mapboxgl.SourceSpecification,
+    source: SourceSpecification,
     prevSourceId: string,
-    prevSource: mapboxgl.SourceSpecification
+    prevSource: SourceSpecification
   ) => void;
 };
 

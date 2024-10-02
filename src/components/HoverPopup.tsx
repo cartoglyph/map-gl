@@ -1,15 +1,15 @@
 import React from "react";
 import { createPortal } from "react-dom";
-import mapboxgl from "mapbox-gl";
 import { useLayerEvent, useMap } from "@/hooks";
 import { PopupEvent } from "@/types";
+import { Popup, PopupOptions } from "mapbox-gl";
 
-const DefaultPopupOptions: Partial<mapboxgl.PopupOptions> = {
+const DefaultPopupOptions: Partial<PopupOptions> = {
   closeButton: false,
 };
 type HoverPopupProps = {
   layerId: string;
-  options?: Partial<mapboxgl.PopupOptions>;
+  options?: Partial<PopupOptions>;
   children: (e: PopupEvent) => React.ReactNode;
 };
 const HoverPopup: React.FC<HoverPopupProps> = ({
@@ -18,7 +18,7 @@ const HoverPopup: React.FC<HoverPopupProps> = ({
   children,
 }) => {
   const map = useMap();
-  const popupRef = React.useRef<mapboxgl.Popup | null>(null);
+  const popupRef = React.useRef<Popup | null>(null);
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const [event, setEvent] = React.useState<PopupEvent | null>(null);
 
@@ -26,7 +26,7 @@ const HoverPopup: React.FC<HoverPopupProps> = ({
     if (!map) return;
     const container = document.createElement("div");
     containerRef.current = container;
-    const popup = new mapboxgl.Popup({ ...DefaultPopupOptions, ...options });
+    const popup = new Popup({ ...DefaultPopupOptions, ...options });
     popup.setDOMContent(container);
     popupRef.current = popup;
     return () => {

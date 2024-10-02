@@ -1,9 +1,10 @@
 import React from "react";
 import { MapEventCallback } from "@/types";
+import { Map, MapEventType } from "mapbox-gl";
 
 type UseMapEventParams = {
-  map: mapboxgl.Map | null;
-  type: mapboxgl.MapEventType;
+  map: Map | null;
+  type: MapEventType;
   disabled?: boolean;
   callback: MapEventCallback;
 };

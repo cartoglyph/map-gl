@@ -1,5 +1,5 @@
 import React from "react";
-import mapboxgl from "mapbox-gl";
+import { Map, MapOptions } from "mapbox-gl";
 import MapProvider from "@/providers/MapProvider";
 import { useMapStore } from "@/store/mapStore";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -15,10 +15,10 @@ export type MapProps = {
   /** Children map layers */
   children?: React.ReactNode;
   /** Mapbox options */
-  options?: Omit<mapboxgl.MapOptions, "container">;
+  options?: Omit<MapOptions, "container">;
 };
 
-const DefaultMapOptions: Partial<mapboxgl.MapOptions> = {
+const DefaultMapOptions: Partial<MapOptions> = {
   style: "mapbox://styles/mapbox/streets-v12",
   center: [-74.5, 40],
   zoom: 9,
@@ -46,8 +46,8 @@ const InnerMap: React.FC<MapProps> = ({
     loadedRef.current = true;
 
     // Setup mapbox access token and create map
-    mapboxgl.accessToken = accessToken;
-    const map = new mapboxgl.Map({
+    accessToken = accessToken;
+    const map = new Map({
       container: id,
       ...{ ...DefaultMapOptions, ...options },
     });
@@ -97,7 +97,7 @@ const InnerMap: React.FC<MapProps> = ({
 };
 
 /** A dimapio map-gl map */
-const Map: React.FC<MapProps> = (props) => {
+const DimapioMap: React.FC<MapProps> = (props) => {
   return (
     <MapProvider>
       <InnerMap {...props} />
@@ -105,12 +105,12 @@ const Map: React.FC<MapProps> = (props) => {
   );
 };
 
-export default Map;
+export default DimapioMap;
 
 // TODO: we might be able to use `map.getContainer` instead of passing the container
 /** Create a resize observer to resize the map */
 function createMapResizeObserver(
-  map: mapboxgl.Map,
+  map: Map,
   container: HTMLDivElement
 ): ResizeObserver {
   let timer: NodeJS.Timeout;

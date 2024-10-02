@@ -1,15 +1,15 @@
 import React from "react";
 import { createPortal } from "react-dom";
-import mapboxgl from "mapbox-gl";
+import { Popup, PopupOptions } from "mapbox-gl";
 import { useLayerEvent, useMap } from "@/hooks";
 import { PopupEvent } from "@/types";
 
-const DefaultPopupOptions: Partial<mapboxgl.PopupOptions> = {
+const DefaultPopupOptions: Partial<PopupOptions> = {
   closeButton: false,
 };
 type ClickPopupProps = {
   layerId: string;
-  options?: Partial<mapboxgl.PopupOptions>;
+  options?: Partial<PopupOptions>;
   children: (e: PopupEvent) => React.ReactNode;
 };
 const ClickPopup: React.FC<ClickPopupProps> = ({
@@ -37,7 +37,7 @@ const ClickPopup: React.FC<ClickPopupProps> = ({
       if (!map) return;
       const features = e.features || [];
       if (!features.length) return;
-      const popup = new mapboxgl.Popup({ ...DefaultPopupOptions, ...options });
+      const popup = new Popup({ ...DefaultPopupOptions, ...options });
       popup.setDOMContent(containerRef.current);
       popup.setLngLat(e.lngLat);
       popup.addTo(map);

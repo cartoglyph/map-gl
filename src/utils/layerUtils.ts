@@ -1,13 +1,14 @@
 import { LayerOptions } from "@/types";
 import deepEqual from "./deepEqual";
+import { LayerSpecification, Map, CustomLayerInterface } from "mapbox-gl";
 
 // TODO: Update these to combine `options` and `beforeId` with custom `LayerOptions` type
 /** Get a `Layer` from the map or create one  */
 export function createLayer(
-  map: mapboxgl.Map,
-  options: mapboxgl.LayerSpecification,
+  map: Map,
+  options: LayerSpecification,
   beforeId?: string
-): mapboxgl.LayerSpecification | mapboxgl.CustomLayerInterface | undefined {
+): LayerSpecification | CustomLayerInterface | undefined {
   const layer = map.getLayer(options.id);
   if (layer) return layer;
   // The `source` must exist on the map
@@ -20,7 +21,7 @@ export function createLayer(
 }
 
 /** Remove a `Layer` from the map if it exists */
-export function removeLayer(map: mapboxgl.Map, options: mapboxgl.AnyLayer) {
+export function removeLayer(map: Map, options: LayerSpecification) {
   if (map.getLayer(options.id)) {
     map.removeLayer(options.id);
   }
@@ -28,7 +29,7 @@ export function removeLayer(map: mapboxgl.Map, options: mapboxgl.AnyLayer) {
 
 /** Update a `Layer` */
 export function updateLayer(
-  map: mapboxgl.Map,
+  map: Map,
   id: string,
   props: LayerOptions,
   prevProps: LayerOptions
@@ -78,10 +79,7 @@ export function updateLayer(
 }
 
 /** Sync layers within the map */
-export function syncLayers(
-  map: mapboxgl.Map,
-  layers: Record<string, LayerOptions>
-) {
+export function syncLayers(map: Map, layers: Record<string, LayerOptions>) {
   // Add map layers with expected layers
   Object.values(layers).forEach(({ beforeId, ...options }) => {
     createLayer(map, options, beforeId);

@@ -17,10 +17,9 @@
     "@turf/boolean-valid": "^7.1.0",
     "mapbox-gl": "^3.7.0",
     "zustand": "^4.5.5",
-    "@types/mapbox-gl": "^3.4.0"
+    "@types/geojson": "^7946.0.14"
   },
   "devDependencies": {
-    "@types/geojson": "^7946.0.14",
     "@types/node": "^22.7.4",
     "nodemon": "^3.1.7",
     "prettier": "^3.3.3",

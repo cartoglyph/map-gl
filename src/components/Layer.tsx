@@ -2,10 +2,11 @@ import React from "react";
 import { LayerOptions } from "@/types";
 import { useLayerEvent } from "@/hooks";
 import { useMapStore } from "@/store/mapStore";
+import { LayerSpecification } from "mapbox-gl";
 
 type LayerProps = {
   /** Layer options from mapbox-gl */
-  options: mapboxgl.LayerSpecification;
+  options: LayerSpecification;
   /** Id to put this layer before */
   beforeId?: string;
   /** Enables the 'hover' feature state */
