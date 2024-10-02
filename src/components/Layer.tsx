@@ -61,7 +61,7 @@ const Layer: React.FC<LayerProps> = (props) => {
     callback: (e) => {
       const features = e.features || [];
       features.forEach((feature) => {
-        if (!feature.id) {
+        if (feature.id === undefined) {
           console.warn(
             "Attempted to set the feature state of a feature with no ID"
           );
@@ -135,7 +135,7 @@ const Layer: React.FC<LayerProps> = (props) => {
       // Set 'click' feature states
       const features = e.features || [];
       features.forEach((feature) => {
-        if (!feature.id) {
+        if (feature.id === undefined) {
           console.warn(
             "Attempted to set the feature state of a feature with no ID"
           );
