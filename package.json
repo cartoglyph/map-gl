@@ -16,8 +16,7 @@
   "dependencies": {
     "@turf/boolean-valid": "^7.1.0",
     "mapbox-gl": "^3.7.0",
-    "zustand": "^4.5.5",
-    "@types/geojson": "^7946.0.14"
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
     "@types/node": "^22.7.4",
@@ -29,6 +28,7 @@
   "peerDependencies": {
     "@types/react": ">=17.0.0",
     "@types/react-dom": ">=17.0.0",
+    "@types/geojson": ">=7946.0.14",
     "react": ">=17.0.0",
     "react-dom": ">=17.0.0"
   }
