@@ -12,7 +12,7 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0
       '@types/geojson':
-        specifier: ^7946.0.14
+        specifier: '>=7946.0.14'
         version: 7946.0.14
       '@types/react':
         specifier: '>=17.0.0'
