@@ -46,9 +46,9 @@ const InnerMap: React.FC<MapProps> = ({
     loadedRef.current = true;
 
     // Setup mapbox access token and create map
-    accessToken = accessToken;
     const map = new Map({
       container: id,
+      accessToken,
       ...{ ...DefaultMapOptions, ...options },
     });
 
