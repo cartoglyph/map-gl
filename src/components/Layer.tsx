@@ -64,7 +64,15 @@ const Layer: React.FC<LayerProps> = (props) => {
       features.forEach((feature) => {
         if (feature.id === undefined) {
           console.warn(
-            "Attempted to set the feature state of a feature with no ID"
+            "🚨 Attempted to set the feature state of a feature on layer with no ID 🚨",
+            "\n",
+            `Source: ${feature.source}`,
+            "\n",
+            `Layer: ${feature?.layer?.id}`,
+            "\n",
+            `Properties: ${JSON.stringify(feature.properties, null, 2)}`,
+            "\n",
+            "Note: IDs must be set at the root of the feature."
           );
           return;
         }
@@ -138,7 +146,15 @@ const Layer: React.FC<LayerProps> = (props) => {
       features.forEach((feature) => {
         if (feature.id === undefined) {
           console.warn(
-            "Attempted to set the feature state of a feature with no ID"
+            "🚨 Attempted to set the feature state of a feature on layer with no ID 🚨",
+            "\n",
+            `Source: ${feature.source}`,
+            "\n",
+            `Layer: ${feature?.layer?.id}`,
+            "\n",
+            `Properties: ${JSON.stringify(feature.properties, null, 2)}`,
+            "\n",
+            "Note: IDs must be set at the root of the feature."
           );
           return;
         }
