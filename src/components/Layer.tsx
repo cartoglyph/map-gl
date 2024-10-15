@@ -31,13 +31,30 @@ const Layer: React.FC<LayerProps> = (props) => {
   propsRef.current = props;
   const prevPropsRef = React.useRef<LayerOptions>({ ...options, beforeId });
 
-  const hoveredFeatureIdsRef = React.useRef<Map<string | number, string>>(
-    new Map()
-  );
-  const clickedFeatureIdsRef = React.useRef<Map<string | number, string>>(
-    new Map()
-  );
+  type FeatureIdsMap = Map<
+    string | number,
+    { source: string; sourceLayer: string | undefined }
+  >;
+  const hoveredFeatureIdsRef = React.useRef<FeatureIdsMap>(new Map());
+  const clickedFeatureIdsRef = React.useRef<FeatureIdsMap>(new Map());
 
+  const setMapboxFeatureStates = (
+    featureIds: FeatureIdsMap,
+    type: "hover" | "click",
+    status: boolean
+  ) => {
+    if (!mapStore.map) return;
+    for (const [featureId, opts] of featureIds.entries()) {
+      mapStore.map.setFeatureState(
+        {
+          id: featureId,
+          source: opts.source,
+          sourceLayer: opts.sourceLayer,
+        },
+        { [type]: status }
+      );
+    }
+  };
   // Handle mount
   React.useEffect(() => {
     mapStore.addLayer({ ...options, beforeId });
@@ -53,13 +70,39 @@ const Layer: React.FC<LayerProps> = (props) => {
     mapStore.updateLayer({ ...options, beforeId }, prevPropsRef.current);
   }, [options, beforeId]);
 
-  // Handle 'hover' feature state
+  // Handle cursor
   useLayerEvent({
     map: mapStore.map,
-    type: "mouseenter",
+    type: "mouseover",
+    layerId: options.id,
+    disabled: !hoverCursor,
+    callback: () => {
+      if (!mapStore.map || !propsRef.current.hoverCursor) return;
+      mapStore.map.getCanvas().style.cursor = propsRef.current.hoverCursor;
+    },
+  });
+
+  useLayerEvent({
+    map: mapStore.map,
+    type: "mouseleave",
+    layerId: options.id,
+    disabled: !hover,
+    callback: () => {
+      if (!mapStore.map) return;
+      setMapboxFeatureStates(hoveredFeatureIdsRef.current, "hover", false);
+      hoveredFeatureIdsRef.current.clear();
+      if (hoverCursor) mapStore.map.getCanvas().style.cursor = "";
+    },
+  });
+
+  useLayerEvent({
+    map: mapStore.map,
+    type: "mousemove",
     layerId: options.id,
     disabled: !hover,
     callback: (e) => {
+      setMapboxFeatureStates(hoveredFeatureIdsRef.current, "hover", false);
+      hoveredFeatureIdsRef.current.clear();
       const features = e.features || [];
       features.forEach((feature) => {
         if (feature.id === undefined) {
@@ -76,48 +119,12 @@ const Layer: React.FC<LayerProps> = (props) => {
           );
           return;
         }
-        hoveredFeatureIdsRef.current.set(feature.id, feature.source);
-        if (mapStore.map) {
-          mapStore.map.setFeatureState(
-            { id: feature.id, source: feature.source },
-            { hover: true }
-          );
-        }
+        hoveredFeatureIdsRef.current.set(feature.id, {
+          source: feature.source,
+          sourceLayer: feature.sourceLayer,
+        });
+        setMapboxFeatureStates(hoveredFeatureIdsRef.current, "hover", true);
       });
-    },
-  });
-  useLayerEvent({
-    map: mapStore.map,
-    type: "mouseleave",
-    layerId: options.id,
-    disabled: !hover,
-    callback: () => {
-      if (mapStore.map) {
-        for (const [
-          featureId,
-          source,
-        ] of hoveredFeatureIdsRef.current.entries()) {
-          mapStore.map.setFeatureState(
-            { id: featureId, source },
-            { hover: false }
-          );
-        }
-        hoveredFeatureIdsRef.current.clear();
-        if (hoverCursor) {
-          mapStore.map.getCanvas().style.cursor = "";
-        }
-      }
-    },
-  });
-  // Handle cursor
-  useLayerEvent({
-    map: mapStore.map,
-    type: "mouseover",
-    layerId: options.id,
-    disabled: !hoverCursor,
-    callback: () => {
-      if (!mapStore.map || !propsRef.current.hoverCursor) return;
-      mapStore.map.getCanvas().style.cursor = propsRef.current.hoverCursor;
     },
   });
   // Handle click
@@ -127,18 +134,8 @@ const Layer: React.FC<LayerProps> = (props) => {
     layerId: options.id,
     disabled: !click,
     callback: (e) => {
-      if (!mapStore.map) return;
-
       // Clear existing 'click' feature states
-      for (const [
-        featureId,
-        source,
-      ] of clickedFeatureIdsRef.current.entries()) {
-        mapStore.map.setFeatureState(
-          { id: featureId, source },
-          { click: false }
-        );
-      }
+      setMapboxFeatureStates(clickedFeatureIdsRef.current, "click", false);
       clickedFeatureIdsRef.current.clear();
 
       // Set 'click' feature states
@@ -158,13 +155,11 @@ const Layer: React.FC<LayerProps> = (props) => {
           );
           return;
         }
-        clickedFeatureIdsRef.current.set(feature.id, feature.source);
-        if (mapStore.map) {
-          mapStore.map.setFeatureState(
-            { id: feature.id, source: feature.source },
-            { click: true }
-          );
-        }
+        clickedFeatureIdsRef.current.set(feature.id, {
+          source: feature.source,
+          sourceLayer: feature.sourceLayer,
+        });
+        setMapboxFeatureStates(clickedFeatureIdsRef.current, "click", true);
       });
     },
   });
