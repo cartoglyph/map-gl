@@ -2,7 +2,7 @@
   "compilerOptions": {
     "lib": ["ESNext", "DOM"],
     "target": "ESNext",
-    "module": "commonjs",
+    "module": "ESNext",
     "baseUrl": "./src",
     "rootDir": "./src",
     "outDir": "./dist",
@@ -10,7 +10,7 @@
       "@/*": ["./*"]
     },
     "moduleResolution": "node",
-    "jsx": "preserve",
+    "jsx": "react",
     "sourceMap": false,
     "composite": false,
     "strictNullChecks": true,

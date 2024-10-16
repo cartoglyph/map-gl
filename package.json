@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "keywords": [],
-  "author": "",
+  "author": "Nicholas Siebenaller <nick@leftside.io>",
   "license": "ISC",
   "scripts": {
     "build": "tsc && tsc-alias",
@@ -19,16 +19,16 @@
     "zustand": "^4.5.5"
   },
   "devDependencies": {
-    "@types/node": "^22.7.4",
+    "@types/node": "^22.7.5",
     "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
     "tsc-alias": "^1.8.10",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.3"
   },
   "peerDependencies": {
+    "@types/geojson": ">=7946.0.14",
     "@types/react": ">=17.0.0",
     "@types/react-dom": ">=17.0.0",
-    "@types/geojson": ">=7946.0.14",
     "react": ">=17.0.0",
     "react-dom": ">=17.0.0"
   }
