@@ -28,7 +28,7 @@ jobs:
 
       - run: |
           CURRENT_VERSION=$(pnpm pkg get version | tr -d \")
-          CANARY_VERSION=$CURRENT_VERSION-${{ github.sha }}
+          CANARY_VERSION="$CURRENT_VERSION-canary-${{ github.sha }}"
           pnpm version --prerelease $CANARY_VERSION --git-tag-version=false
           pnpm publish --tag canary --no-git-checks
         env:
