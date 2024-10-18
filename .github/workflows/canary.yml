@@ -3,8 +3,6 @@ name: Publish Canary
 on:
   workflow_dispatch:
   push:
-    paths:
-      - "src/**"
     branches: [main]
 
 jobs:
