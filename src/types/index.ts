@@ -18,3 +18,11 @@ export type BBoxStyle = Omit<
   React.CSSProperties,
   "position" | "top" | "left" | "width" | "height"
 >;
+
+export type OrderedLayerSpecification = LayerSpecification & {
+  beforeId?: string;
+};
+export type OrderedLayersSpecification = Record<
+  string,
+  OrderedLayerSpecification
+>;
