@@ -1,8 +1,13 @@
 import { LayerOptions } from "@/types";
 import deepEqual from "./deepEqual";
-import { LayerSpecification, Map, CustomLayerInterface } from "mapbox-gl";
+import {
+  LayerSpecification,
+  Map,
+  CustomLayerInterface,
+  LayoutSpecification,
+  PaintSpecification,
+} from "mapbox-gl";
 
-// TODO: Update these to combine `options` and `beforeId` with custom `LayerOptions` type
 /** Get a `Layer` from the map or create one  */
 export function createLayer(
   map: Map,
@@ -11,7 +16,7 @@ export function createLayer(
 ): LayerSpecification | CustomLayerInterface | undefined {
   const layer = map.getLayer(options.id);
   if (layer) return layer;
-  // The `source` must exist on the map
+  // The `source` must exist on the map to create a layer
   if ("source" in options && typeof options.source === "string") {
     const source = map.getSource(options.source);
     if (!source) return;
@@ -34,47 +39,63 @@ export function updateLayer(
   props: LayerOptions,
   prevProps: LayerOptions
 ) {
-  const { layout = {}, paint = {}, filter, minzoom, maxzoom, beforeId } = props;
-
-  if (beforeId !== prevProps.beforeId) {
-    map.moveLayer(id, beforeId);
+  // Handle 'beforeId'
+  if (props.beforeId !== prevProps.beforeId) {
+    map.moveLayer(id, props.beforeId);
   }
-  if (layout !== prevProps.layout) {
-    const prevLayout = prevProps.layout || {};
+
+  // Handle 'layout'
+  const layout = props.layout || {};
+  const prevLayout = prevProps.layout || {};
+  if (layout !== layout) {
+    // Create or update layout properties
     for (const key in layout) {
       if (!deepEqual(layout[key], prevLayout[key])) {
-        map.setLayoutProperty(id, key as any, layout[key]);
+        map.setLayoutProperty(
+          id,
+          key as keyof LayoutSpecification,
+          layout[key]
+        );
       }
     }
+    // Remove layout properties
     for (const key in prevLayout) {
       if (!layout.hasOwnProperty(key)) {
-        map.setLayoutProperty(id, key as any, undefined);
-      }
-    }
-  }
-  if (paint !== prevProps.paint) {
-    const prevPaint = prevProps.paint || {};
-    for (const key in paint) {
-      if (!deepEqual(paint[key], prevPaint[key])) {
-        map.setPaintProperty(id, key as any, paint[key]);
-      }
-    }
-    for (const key in prevPaint) {
-      if (!paint.hasOwnProperty(key)) {
-        map.setPaintProperty(id, key as any, undefined);
+        map.setLayoutProperty(id, key as keyof LayoutSpecification, undefined);
       }
     }
   }
 
-  if (!deepEqual(filter, prevProps.filter)) {
-    map.setFilter(id, filter);
+  // Handle 'paint'
+  const paint = props.paint || {};
+  const prevPaint = prevProps.paint || {};
+  if (paint !== prevPaint) {
+    // Create or update paint properties
+    for (const key in paint) {
+      if (!deepEqual(paint[key], prevPaint[key])) {
+        map.setPaintProperty(id, key as keyof PaintSpecification, paint[key]);
+      }
+    }
+    // Remove paint properties
+    for (const key in prevPaint) {
+      if (!paint.hasOwnProperty(key)) {
+        map.setPaintProperty(id, key as keyof PaintSpecification, undefined);
+      }
+    }
   }
+
+  // Handle 'filter'
+  if (!deepEqual(props.filter, prevProps.filter)) {
+    map.setFilter(id, props.filter);
+  }
+
+  // Handle 'minzoom' and 'maxzoom'
   if (
-    minzoom &&
-    maxzoom &&
-    (minzoom !== prevProps.minzoom || maxzoom !== prevProps.maxzoom)
+    props.minzoom &&
+    props.maxzoom &&
+    (props.minzoom !== prevProps.minzoom || props.maxzoom !== prevProps.maxzoom)
   ) {
-    map.setLayerZoomRange(id, minzoom, maxzoom);
+    map.setLayerZoomRange(id, props.minzoom, props.maxzoom);
   }
 }
 
