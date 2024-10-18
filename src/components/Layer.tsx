@@ -5,7 +5,7 @@ import { useMapStore } from "@/store/mapStore";
 
 type FeaturesById = Map<string | number, GeoJSONFeature>;
 
-export type LayerProps = {
+type LayerProps = {
   /** Layer options from mapbox-gl */
   options: LayerSpecification;
   /** Id to put this layer before */
@@ -17,6 +17,7 @@ export type LayerProps = {
   /** Enabled the 'click' feature state */
   click?: boolean;
 };
+
 const Layer: React.FC<LayerProps> = (props) => {
   const { options, beforeId, hover = false, hoverCursor, click } = props;
   const propsRef = React.useRef<LayerProps>(props);
@@ -35,7 +36,7 @@ const Layer: React.FC<LayerProps> = (props) => {
 
   // Handle mount
   React.useEffect(() => {
-    mapStore.addLayer(props);
+    mapStore.addLayer({ ...props.options, beforeId: props.beforeId });
 
     // Handle unmount
     return () => {
@@ -45,7 +46,13 @@ const Layer: React.FC<LayerProps> = (props) => {
 
   // Handle update layer
   React.useEffect(() => {
-    mapStore.updateLayer(propsRef.current, prevPropsRef.current);
+    mapStore.updateLayer(
+      { ...propsRef.current.options, beforeId: propsRef.current.beforeId },
+      {
+        ...prevPropsRef.current.options,
+        beforeId: prevPropsRef.current.beforeId,
+      }
+    );
   }, [options, beforeId]);
 
   // Handle 'mouseover'

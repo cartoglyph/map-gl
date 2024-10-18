@@ -1,14 +1,24 @@
 import React from "react";
+import { Map, SourceSpecification, SourcesSpecification } from "mapbox-gl";
 import { StoreApi, createStore, useStore } from "zustand";
-import { removeLayer, syncLayers, updateLayer } from "@/utils/layerUtils";
-import { removeSource, syncSources, updateSource } from "@/utils/sourceUtils";
-import { Map, SourceSpecification } from "mapbox-gl";
-import { LayerProps } from "@/components/Layer";
+import {
+  removeLayer,
+  syncLayers,
+  createLayer,
+  updateLayer,
+} from "@/utils/layerUtils";
+import {
+  removeSource,
+  syncSources,
+  createSource,
+  updateSource,
+} from "@/utils/sourceUtils";
+import { OrderedLayersSpecification, OrderedLayerSpecification } from "@/types";
 
 type MapState = {
   map: Map | null;
-  sources: Record<string, SourceSpecification>;
-  layers: Record<string, LayerProps>;
+  sources: SourcesSpecification;
+  layers: OrderedLayersSpecification;
 };
 
 type MapActions = {
@@ -16,9 +26,12 @@ type MapActions = {
   init: (map: Map) => void;
   unload: () => void;
   // Layer actions
-  addLayer: (layer: LayerProps) => void;
+  addLayer: (layer: OrderedLayerSpecification) => void;
   removeLayer: (layerId: string) => void;
-  updateLayer: (layer: LayerProps, prevLayer: LayerProps) => void;
+  updateLayer: (
+    layer: OrderedLayerSpecification,
+    prevLayer: OrderedLayerSpecification
+  ) => void;
   // Source actions
   addSource: (sourceId: string, source: SourceSpecification) => void;
   removeSource: (sourceId: string) => void;
@@ -43,27 +56,30 @@ export function createMapStore() {
     ...defaultMapState,
     init: (map) => {
       const style = map.getStyle();
-      const currSources = style?.sources || {};
-      const currLayers = (style?.layers || []).reduce(
-        (acc, curr) => ({ ...acc, [curr.id]: curr }),
-        {}
-      );
+      const mapSources: SourcesSpecification = style?.sources || {};
+      const mapLayers: OrderedLayersSpecification = (
+        style?.layers || []
+      ).reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
       set((state) => {
-        const sources = { ...state.sources, ...currSources };
-        const layers = { ...state.layers, ...currLayers };
-        syncSources(map, sources);
-        syncLayers(map, layers);
+        // Create map sources that were defined before the map was initialized
+        Object.entries(state.sources).forEach(([id, options]) => {
+          createSource(map, id, options);
+        });
+        // Create map layers that were defined before the map was initialized
+        Object.values(state.layers).forEach((options) => {
+          createLayer(map, options);
+        });
         return {
           map,
-          sources,
-          layers,
+          sources: { ...state.sources, ...mapSources },
+          layers: { ...state.layers, ...mapLayers },
         };
       });
     },
     unload: () => set(defaultMapState),
     addLayer: (layer) => {
       set(({ map, layers }) => {
-        layers[layer.options.id] = layer;
+        layers[layer.id] = layer;
 
         // Sync layers with map
         if (map) {
@@ -88,18 +104,18 @@ export function createMapStore() {
     updateLayer: (layer, prevLayer) => {
       set(({ map, layers }) => {
         // Check if layer id changed
-        if (layer.options.id !== prevLayer.options.id) {
-          delete layers[prevLayer.options.id];
+        if (layer.id !== prevLayer.id) {
+          delete layers[prevLayer.id];
           if (map) {
-            removeLayer(map, prevLayer.options);
+            removeLayer(map, prevLayer);
           }
         }
 
         // Sync layers with map
-        layers[layer.options.id] = layer;
+        layers[layer.id] = layer;
         if (map) {
           syncLayers(map, layers);
-          updateLayer(map, layer.options.id, layer, prevLayer);
+          updateLayer(map, layer, prevLayer);
         }
 
         return { layers };
