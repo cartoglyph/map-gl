@@ -18,7 +18,6 @@ const Source: React.FC<SourceProps> = (props) => {
   );
 
   const prevPropsRef = React.useRef<SourceProps>(props);
-  prevPropsRef.current = props;
 
   // Handle mount
   React.useEffect(() => {
@@ -38,6 +37,7 @@ const Source: React.FC<SourceProps> = (props) => {
       prevPropsRef.current.id,
       prevPropsRef.current.options
     );
+    prevPropsRef.current = props;
   }, [id, options]);
 
   return null;
