@@ -53,6 +53,7 @@ const Layer: React.FC<LayerProps> = (props) => {
         beforeId: prevPropsRef.current.beforeId,
       }
     );
+    prevPropsRef.current = props;
   }, [options, beforeId]);
 
   // Handle 'mouseover'
