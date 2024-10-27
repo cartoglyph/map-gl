@@ -1,6 +1,6 @@
 import React from "react";
-import { useMapStore } from "@/store/mapStore";
 import { SourceSpecification } from "mapbox-gl";
+import { useMapStore } from "@/hooks/useMapStore";
 
 type SourceProps = {
   id: string;

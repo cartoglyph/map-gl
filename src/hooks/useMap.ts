@@ -1,8 +1,8 @@
 import React from "react";
 import { useStore } from "zustand";
 import { useGlobalStore } from "@/store/globalStore";
-import { MapStoreContext } from "@/store/mapStore";
 import { Map } from "mapbox-gl";
+import { MapStoreContext } from "./useMapStore";
 
 /** Get a map-gl map reference */
 const useMap = (mapId?: string): Map | null => {

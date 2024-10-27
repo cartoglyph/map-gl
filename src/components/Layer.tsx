@@ -1,7 +1,7 @@
 import React from "react";
 import { LayerSpecification, GeoJSONFeature } from "mapbox-gl";
 import { useLayerEvent } from "@/hooks";
-import { useMapStore } from "@/store/mapStore";
+import { useMapStore } from "@/hooks/useMapStore";
 
 type FeaturesById = Map<string | number, GeoJSONFeature>;
 

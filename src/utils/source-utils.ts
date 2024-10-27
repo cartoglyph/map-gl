@@ -1,7 +1,7 @@
 import { Map, Source, SourceSpecification } from "mapbox-gl";
 
-/** Get a `Source` from the map or create one  */
-export function createSource(
+/** Add a source to the map if it does not exist then return the added source  */
+export function addSource(
   map: Map,
   sourceId: string,
   options: SourceSpecification
@@ -81,24 +81,4 @@ export function updateSource(
       }
     }
   }
-}
-
-/** Sync sources within the map */
-export function syncSources(
-  map: Map,
-  sources: Record<string, SourceSpecification>
-) {
-  // Add map sources from the sources
-  Object.entries(sources).forEach(([id, options]) => {
-    createSource(map, id, options);
-  });
-
-  // Remove map sources that do not exist in the atom
-  const currentSources = map.getStyle()?.sources || {};
-  const sourceIds = Object.keys(sources);
-  Object.keys(currentSources).forEach((id) => {
-    if (!sourceIds.includes(id)) {
-      removeSource(map, id);
-    }
-  });
 }
