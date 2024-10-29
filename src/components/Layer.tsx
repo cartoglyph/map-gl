@@ -118,15 +118,14 @@ const Layer: React.FC<LayerProps> = (props) => {
           return;
         }
 
-        // Check if feature is already hovered
-        if (hoveredFeaturesRef.current.has(feature.id)) {
-          // Feature already hovered
-          return;
-        }
-
-        // Set feature as hovered
-        map.setFeatureState(feature, { hover: true });
+        // Set feature to be hovered
         nextHoveredFeatures.set(feature.id, feature);
+
+        // Check if feature is already set hovered
+        if (!hoveredFeaturesRef.current.has(feature.id)) {
+          // Set feature as hovered
+          map.setFeatureState(feature, { hover: true });
+        }
       });
 
       // Handle feature state no longer hovered
