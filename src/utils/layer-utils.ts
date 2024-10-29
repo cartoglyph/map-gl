@@ -1,9 +1,9 @@
 import deepEqual from "./deepEqual";
 import { LayerSpecification, Map, CustomLayerInterface } from "mapbox-gl";
-import { OrderedLayerSpecification, OrderedLayersSpecification } from "@/types";
+import { OrderedLayerSpecification } from "@/types";
 
-/** Get a `Layer` from the map or create one  */
-export function createLayer(
+/** Add a layer to the map if it does not exist then return the added layer  */
+export function addLayer(
   map: Map,
   options: OrderedLayerSpecification
 ): LayerSpecification | CustomLayerInterface | undefined {
@@ -19,9 +19,9 @@ export function createLayer(
 }
 
 /** Remove a `Layer` from the map if it exists */
-export function removeLayer(map: Map, options: OrderedLayerSpecification) {
-  if (map.getLayer(options.id)) {
-    map.removeLayer(options.id);
+export function removeLayer(map: Map, layerId: string) {
+  if (map.getLayer(layerId)) {
+    map.removeLayer(layerId);
   }
 }
 
@@ -73,21 +73,4 @@ export function updateLayer(
   ) {
     map.setLayerZoomRange(props.id, props.minzoom, props.maxzoom);
   }
-}
-
-/** Sync layers within the map */
-export function syncLayers(map: Map, layers: OrderedLayersSpecification) {
-  // Add map layers with expected layers
-  Object.values(layers).forEach((options) => {
-    createLayer(map, options);
-  });
-
-  // Remove map layers that are not expected
-  const currentLayers = map.getStyle()?.layers || [];
-  const layerIds = Object.keys(layers);
-  currentLayers.forEach((layer) => {
-    if (!layerIds.includes(layer.id)) {
-      removeLayer(map, layer);
-    }
-  });
 }

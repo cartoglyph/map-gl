@@ -1,9 +1,9 @@
 import React from "react";
 import { Map, MapOptions } from "mapbox-gl";
 import MapProvider from "@/providers/MapProvider";
-import { useMapStore } from "@/store/mapStore";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useGlobalStore } from "@/store/globalStore";
+import { useMapStore } from "@/hooks/useMapStore";
 
 export type MapProps = {
   /** Unique ID for the map */

@@ -2,11 +2,8 @@
 
 import React from "react";
 import { type StoreApi } from "zustand";
-import {
-  type MapStore,
-  createMapStore,
-  MapStoreContext,
-} from "@/store/mapStore";
+import { type MapStore, createMapStore } from "@/store/map-store";
+import { MapStoreContext } from "@/hooks/useMapStore";
 
 const MapProvider: React.FC<{
   children: React.ReactNode;
