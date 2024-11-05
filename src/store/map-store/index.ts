@@ -1,5 +1,4 @@
-import React from "react";
-import { StoreApi, createStore, useStore } from "zustand";
+import { createStore } from "zustand";
 import createMapSlice, { MapSlice } from "./map-slice";
 import createLayerSlice, { LayerSlice } from "./layer-slice";
 import createSourceSlice, { SourceSlice } from "./source-slice";
