@@ -25,7 +25,7 @@ const useLayerEvent = ({
     const listener: MapEventCallback = (e) => callbackRef.current(e);
     map.on(type, layerId, listener);
     return () => {
-      map.off(type, listener);
+      map.off(type, layerId, listener);
     };
   }, [map, type, layerId, disabled]);
 };
