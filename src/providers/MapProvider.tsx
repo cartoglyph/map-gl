@@ -8,7 +8,7 @@ import { MapStoreContext } from "@/hooks/useMapStore";
 const MapProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const storeRef = React.useRef<StoreApi<MapStore>>();
+  const storeRef = React.useRef<StoreApi<MapStore> | undefined>(undefined);
 
   if (!storeRef.current) {
     storeRef.current = createMapStore();

@@ -33,7 +33,7 @@ const InnerMap: React.FC<MapProps> = ({
 }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const loadedRef = React.useRef<boolean>(false);
-  const resizeObserverRef = React.useRef<ResizeObserver>();
+  const resizeObserverRef = React.useRef<ResizeObserver | undefined>(undefined);
   const globalStore = useGlobalStore((store) => store);
   const mapStore = useMapStore((store) => store);
 
