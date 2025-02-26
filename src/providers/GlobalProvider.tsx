@@ -13,7 +13,7 @@ const GlobalProvider: React.FC<{
   children: React.ReactNode;
   theme?: MapTheme;
 }> = ({ children, theme }) => {
-  const storeRef = React.useRef<StoreApi<GlobalStore>>();
+  const storeRef = React.useRef<StoreApi<GlobalStore> | undefined>(undefined);
 
   if (!storeRef.current) {
     storeRef.current = createGlobalStore({ theme });

@@ -29,7 +29,7 @@ const BBoxTool: React.FC<BBoxToolProps> = ({ disabled, bboxStyle, onBBox }) => {
   themeRef.current = theme;
 
   const pointsRef = React.useRef<Point[]>([]);
-  const bboxRef = React.useRef<HTMLDivElement>();
+  const bboxRef = React.useRef<HTMLDivElement | undefined>(undefined);
   const [isMouseDown, setIsMouseDown] = React.useState<boolean>(false);
 
   React.useEffect(() => {
