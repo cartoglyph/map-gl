@@ -1,14 +1,14 @@
 import React from "react";
-import { Map, Point } from "mapbox-gl";
+import mapboxgl from "mapbox-gl";
 import { useComponentTheme, useMap, useMapEvent } from "@/hooks";
 import { BBoxStyle, MapLayerEvent } from "@/types";
 
-function getPoint(map: Map, e: MapLayerEvent): Point {
+function getPoint(map: mapboxgl.Map, e: MapLayerEvent): mapboxgl.Point {
   const canvas = map.getCanvasContainer();
   const rect = canvas.getBoundingClientRect();
   const clientX = "clientX" in e.originalEvent ? e.originalEvent.clientX : 0;
   const clientY = "clientY" in e.originalEvent ? e.originalEvent.clientY : 0;
-  const point = new Point(
+  const point = new mapboxgl.Point(
     clientX - rect.left - canvas.clientLeft,
     clientY - rect.top - canvas.clientTop
   );
@@ -18,7 +18,7 @@ function getPoint(map: Map, e: MapLayerEvent): Point {
 type BBoxToolProps = {
   disabled?: boolean;
   bboxStyle?: BBoxStyle;
-  onBBox: (bbox: [Point, Point]) => void;
+  onBBox: (bbox: [mapboxgl.Point, mapboxgl.Point]) => void;
 };
 const BBoxTool: React.FC<BBoxToolProps> = ({ disabled, bboxStyle, onBBox }) => {
   const map = useMap();
@@ -28,7 +28,7 @@ const BBoxTool: React.FC<BBoxToolProps> = ({ disabled, bboxStyle, onBBox }) => {
   const themeRef = React.useRef(theme);
   themeRef.current = theme;
 
-  const pointsRef = React.useRef<Point[]>([]);
+  const pointsRef = React.useRef<mapboxgl.Point[]>([]);
   const bboxRef = React.useRef<HTMLDivElement | undefined>(undefined);
   const [isMouseDown, setIsMouseDown] = React.useState<boolean>(false);
 

@@ -1,11 +1,11 @@
-import { Map, Source, SourceSpecification } from "mapbox-gl";
+import mapboxgl from "mapbox-gl";
 
 /** Add a source to the map if it does not exist then return the added source  */
 export function addSource(
-  map: Map,
+  map: mapboxgl.Map,
   sourceId: string,
-  options: SourceSpecification
-): Source | undefined {
+  options: mapboxgl.SourceSpecification
+): mapboxgl.Source | undefined {
   const source = map.getSource(sourceId);
   if (source) return source;
   map.addSource(sourceId, options);
@@ -13,7 +13,7 @@ export function addSource(
 }
 
 /** Remove a `Source` and all dependent `Layers` from the map if they exists */
-export function removeSource(map: Map, sourceId: string) {
+export function removeSource(map: mapboxgl.Map, sourceId: string) {
   // Get the source reference from the map
   const source = map.getSource(sourceId);
   if (!source) return;
@@ -32,10 +32,10 @@ export function removeSource(map: Map, sourceId: string) {
 
 /** Update a `Source` */
 export function updateSource(
-  map: Map,
+  map: mapboxgl.Map,
   id: string,
-  props: SourceSpecification,
-  prevProps: SourceSpecification
+  props: mapboxgl.SourceSpecification,
+  prevProps: mapboxgl.SourceSpecification
 ) {
   const source = map.getSource(id);
   if (!source) return;

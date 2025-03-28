@@ -1,13 +1,13 @@
 import React from "react";
-import { LayerSpecification, GeoJSONFeature } from "mapbox-gl";
+import mapboxgl from "mapbox-gl";
 import { useLayerEvent } from "@/hooks";
 import { useMapStore } from "@/hooks/useMapStore";
 
-type FeaturesById = Map<string | number, GeoJSONFeature>;
+type FeaturesById = Map<string | number, mapboxgl.GeoJSONFeature>;
 
 type LayerProps = {
   /** Layer options from mapbox-gl */
-  options: LayerSpecification;
+  options: mapboxgl.LayerSpecification;
   /** Id to put this layer before */
   beforeId?: string;
   /** Enables the 'hover' feature state */

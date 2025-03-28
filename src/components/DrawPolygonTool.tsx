@@ -11,11 +11,7 @@ import {
 import { useComponentTheme, useLayerEvent, useMap, useMapEvent } from "@/hooks";
 import Source from "./Source";
 import Layer from "./Layer";
-import {
-  FillLayerSpecification,
-  LineLayerSpecification,
-  CircleLayerSpecification,
-} from "mapbox-gl";
+import mapboxgl from "mapbox-gl";
 
 // https://docs.mapbox.com/mapbox-gl-js/example/geojson-line/
 type DrawPolygonToolProps = {
@@ -23,10 +19,10 @@ type DrawPolygonToolProps = {
   disabled?: boolean;
   onPolygon: (polygon: Feature<Polygon>) => void;
   onInvalid?: () => void;
-  fillPaint?: FillLayerSpecification["paint"];
-  lineLayout?: FillLayerSpecification["layout"];
-  linePaint?: LineLayerSpecification["paint"];
-  circlePaint?: CircleLayerSpecification["paint"];
+  fillPaint?: mapboxgl.FillLayerSpecification["paint"];
+  lineLayout?: mapboxgl.FillLayerSpecification["layout"];
+  linePaint?: mapboxgl.LineLayerSpecification["paint"];
+  circlePaint?: mapboxgl.CircleLayerSpecification["paint"];
 };
 const DrawPolygonTool: React.FC<DrawPolygonToolProps> = ({
   id,
