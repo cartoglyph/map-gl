@@ -1,12 +1,16 @@
 import deepEqual from "./deepEqual";
-import mapboxgl from "mapbox-gl";
-import { OrderedLayerSpecification } from "@/types";
+import {
+  OrderedLayerSpecification,
+  CustomLayerInterface,
+  LayerSpecification,
+  Map,
+} from "@/types";
 
 /** Add a layer to the map if it does not exist then return the added layer  */
 export function addLayer(
-  map: mapboxgl.Map,
+  map: Map,
   options: OrderedLayerSpecification
-): mapboxgl.LayerSpecification | mapboxgl.CustomLayerInterface | undefined {
+): LayerSpecification | CustomLayerInterface | undefined {
   const layer = map.getLayer(options.id);
   if (layer) return layer;
   // The `source` must exist on the map
@@ -19,7 +23,7 @@ export function addLayer(
 }
 
 /** Remove a `Layer` from the map if it exists */
-export function removeLayer(map: mapboxgl.Map, layerId: string) {
+export function removeLayer(map: Map, layerId: string) {
   if (map.getLayer(layerId)) {
     map.removeLayer(layerId);
   }
@@ -27,7 +31,7 @@ export function removeLayer(map: mapboxgl.Map, layerId: string) {
 
 /** Update a `Layer` */
 export function updateLayer(
-  map: mapboxgl.Map,
+  map: Map,
   props: OrderedLayerSpecification,
   prevProps: OrderedLayerSpecification
 ) {
