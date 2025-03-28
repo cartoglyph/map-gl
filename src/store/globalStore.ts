@@ -1,16 +1,17 @@
 import React from "react";
 import { StoreApi, createStore, useStore } from "zustand";
 import { DefaultTheme, MapTheme } from "@/theme";
+import { Map } from "@/types";
 
 type GlobalState = {
   /** A record of all map references by id */
-  maps: Record<string, mapboxgl.Map | undefined>;
+  maps: Record<string, Map | undefined>;
   /** Theme for all map-gl components */
   theme: MapTheme;
 };
 
 type GlobalActions = {
-  addMap: (mapId: string, mapRef: mapboxgl.Map) => void;
+  addMap: (mapId: string, mapRef: Map) => void;
   removeMap: (mapId: string) => void;
 };
 
