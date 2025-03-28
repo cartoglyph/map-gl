@@ -1,10 +1,10 @@
 import React from "react";
-import { SourceSpecification } from "mapbox-gl";
+import mapboxgl from "mapbox-gl";
 import { useMapStore } from "@/hooks/useMapStore";
 
 type SourceProps = {
   id: string;
-  options: SourceSpecification;
+  options: mapboxgl.SourceSpecification;
 };
 const Source: React.FC<SourceProps> = (props) => {
   const { id, options } = props;

@@ -1,4 +1,4 @@
-import { Map, SourcesSpecification } from "mapbox-gl";
+import mapboxgl from "mapbox-gl";
 import { StateCreator } from "zustand";
 import { OrderedLayersSpecification } from "@/types";
 import { addSource } from "@/utils/source-utils";
@@ -8,9 +8,9 @@ import { LayerSlice } from "./layer-slice";
 
 export type MapSlice = {
   /** A map reference */
-  map: Map | null;
+  map: mapboxgl.Map | null;
   /** Initialized a map reference */
-  init: (map: Map) => void;
+  init: (map: mapboxgl.Map) => void;
   /** Unloads a map reference */
   unload: () => void;
 };
@@ -24,7 +24,7 @@ const createMapSlice: StateCreator<
   map: null,
   init: (map) => {
     const style = map.getStyle();
-    const mapSources: SourcesSpecification = style?.sources || {};
+    const mapSources: mapboxgl.SourcesSpecification = style?.sources || {};
     const mapLayers: OrderedLayersSpecification = (style?.layers || []).reduce(
       (acc, curr) => ({ ...acc, [curr.id]: curr }),
       {}
@@ -32,7 +32,7 @@ const createMapSlice: StateCreator<
     set((state) => {
       // Create map sources that were defined before the map was initialized
       Object.entries(state.sources).forEach(([id, sourceSpec]) => {
-        addSource(map, id, sourceSpec);
+        addSource(map, id, sourceSpec as mapboxgl.SourceSpecification);
       });
       // Create map layers that were defined before the map was initialized
       Object.values(state.layers).forEach((layerSpec) => {
