@@ -10,7 +10,7 @@
   "license": "ISC",
   "scripts": {
     "build-old": "tsc && tsc-alias",
-    "build": "swc src --out-dir dist --strip-leading-paths && tsc --emitDeclarationOnly",
+    "build": "swc src --out-dir dist --strip-leading-paths && tsc --emitDeclarationOnly && tsc-alias",
     "watch": "nodemon",
     "clean": "rm -rf ./dist",
     "format": "prettier --write ."
@@ -23,6 +23,7 @@
   "devDependencies": {
     "@swc/cli": "^0.6.0",
     "@swc/core": "^1.11.13",
+    "@types/react": "18.2.55",
     "@types/node": "^22.7.5",
     "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
