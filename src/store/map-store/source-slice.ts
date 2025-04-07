@@ -1,21 +1,23 @@
 import { StateCreator } from "zustand";
 import { addSource, removeSource, updateSource } from "@/utils/source-utils";
 import { MapSlice } from "./map-slice";
-import { SourceSpecification, SourcesSpecification } from "@/types";
 
 export type SourceSlice = {
   /** A map of sources by id */
-  sources: SourcesSpecification;
+  sources: mapboxgl.SourcesSpecification;
   /** Add a source to the map */
-  addSource: (sourceId: string, sourceSpec: SourceSpecification) => void;
+  addSource: (
+    sourceId: string,
+    sourceSpec: mapboxgl.SourceSpecification
+  ) => void;
   /** Remove a source from the map */
   removeSource: (sourceId: string) => void;
   /** Update a source on the map */
   updateSource: (
     sourceId: string,
-    sourceSpec: SourceSpecification,
+    sourceSpec: mapboxgl.SourceSpecification,
     prevSourceId: string,
-    prevSourceSpec: SourceSpecification
+    prevSourceSpec: mapboxgl.SourceSpecification
   ) => void;
 };
 
