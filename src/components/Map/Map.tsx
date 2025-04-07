@@ -3,7 +3,6 @@ import mapboxgl from "mapbox-gl";
 import MapProvider from "@/providers/MapProvider";
 import { useGlobalStore } from "@/store/globalStore";
 import { useMapStore } from "@/hooks/useMapStore";
-import { Map, MapOptions } from "@/types";
 
 export type MapProps = {
   /** Unique ID for the map */
@@ -15,10 +14,10 @@ export type MapProps = {
   /** Children map layers */
   children?: React.ReactNode;
   /** Mapbox options */
-  options?: Omit<MapOptions, "container">;
+  options?: Omit<mapboxgl.MapOptions, "container">;
 };
 
-const DefaultMapOptions: Partial<MapOptions> = {
+const DefaultMapOptions: Partial<mapboxgl.MapOptions> = {
   style: "mapbox://styles/mapbox/streets-v12",
   center: [-74.5, 40],
   zoom: 9,
@@ -110,7 +109,7 @@ export default DimapioMap;
 // TODO: we might be able to use `map.getContainer` instead of passing the container
 /** Create a resize observer to resize the map */
 function createMapResizeObserver(
-  map: Map,
+  map: mapboxgl.Map,
   container: HTMLDivElement
 ): ResizeObserver {
   let timer: NodeJS.Timeout;

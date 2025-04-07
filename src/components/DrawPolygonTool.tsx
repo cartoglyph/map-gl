@@ -8,11 +8,6 @@ import {
   Point,
   Polygon,
 } from "geojson";
-import {
-  FillLayerSpecification,
-  LineLayerSpecification,
-  CircleLayerSpecification,
-} from "@/types";
 import { useComponentTheme, useLayerEvent, useMap, useMapEvent } from "@/hooks";
 import Source from "./Source";
 import Layer from "./Layer";
@@ -23,10 +18,10 @@ type DrawPolygonToolProps = {
   disabled?: boolean;
   onPolygon: (polygon: Feature<Polygon>) => void;
   onInvalid?: () => void;
-  fillPaint?: FillLayerSpecification["paint"];
-  lineLayout?: FillLayerSpecification["layout"];
-  linePaint?: LineLayerSpecification["paint"];
-  circlePaint?: CircleLayerSpecification["paint"];
+  fillPaint?: mapboxgl.FillLayerSpecification["paint"];
+  lineLayout?: mapboxgl.FillLayerSpecification["layout"];
+  linePaint?: mapboxgl.LineLayerSpecification["paint"];
+  circlePaint?: mapboxgl.CircleLayerSpecification["paint"];
 };
 const DrawPolygonTool: React.FC<DrawPolygonToolProps> = ({
   id,
