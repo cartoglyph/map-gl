@@ -1,4 +1,4 @@
-# @dimapio/map-gl
+# @cartoglyph/map-gl
 
 Interactive maps in the browser
 
