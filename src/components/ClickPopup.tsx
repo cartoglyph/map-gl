@@ -9,11 +9,13 @@ const DefaultPopupOptions: Partial<PopupOptions> = {
 };
 type ClickPopupProps = {
   layerId: string;
+  locked?: boolean;
   options?: Partial<PopupOptions>;
   children: (e: PopupEvent) => React.ReactNode;
 };
 const ClickPopup: React.FC<ClickPopupProps> = ({
   layerId,
+  locked = false,
   options,
   children,
 }) => {
@@ -33,6 +35,7 @@ const ClickPopup: React.FC<ClickPopupProps> = ({
     type: "click",
     layerId,
     callback: (e) => {
+      if (locked) return; // 🔒 Prevent creating new popups when locked
       if (!containerRef.current) return;
       if (!map) return;
       const features = e.features || [];
