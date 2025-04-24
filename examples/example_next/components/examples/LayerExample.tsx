@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Map, useMap, Layer, Source, useLayerEvent } from "@dimapio/map-gl";
+import { Map, useMap, Layer, Source, useLayerEvent } from "@cartoglyph/map-gl";
 
 const LayerExample = () => {
   const map = useMap("main");

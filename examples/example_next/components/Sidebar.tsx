@@ -12,7 +12,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
   return (
     <aside className="h-full overflow-auto border-r border-gray-300">
       <h1 className="border-b border-b-gray-300 px-2 py-4 text-lg">
-        @dimapio/map-gl Examples
+        @cartoglyph/map-gl Examples
       </h1>
       {items.map((item) => {
         if (item.type === "link") {

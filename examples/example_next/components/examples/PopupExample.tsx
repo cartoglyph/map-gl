@@ -7,7 +7,7 @@ import {
   Source,
   ClickPopup,
   HoverPopup,
-} from "@dimapio/map-gl";
+} from "@cartoglyph/map-gl";
 
 const PopupExample = () => {
   const _map = useMap("main");

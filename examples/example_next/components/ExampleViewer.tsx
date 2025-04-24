@@ -1,7 +1,7 @@
 "use client";
 
 import { ExampleRoute, ExampleRouteSchema, ExampleRoutes } from "@/types";
-import { GlobalProvider, MapTheme } from "@dimapio/map-gl";
+import { GlobalProvider, MapTheme } from "@cartoglyph/map-gl";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 
@@ -17,6 +17,12 @@ const EXAMPLES: Record<ExampleRoute, React.ComponentType> = {
   ),
   [ExampleRoutes.Popup]: dynamic(
     () => import("@/components/examples/PopupExample")
+  ),
+  [ExampleRoutes.LayerPopup]: dynamic(
+    () => import("@/components/examples/LayerPopupExample")
+  ),
+  [ExampleRoutes.SyntheticPopup]: dynamic(
+    () => import("@/components/examples/SyntheticPopupExample")
   ),
   [ExampleRoutes.BBoxTool]: dynamic(
     () => import("@/components/examples/BBoxToolExample")

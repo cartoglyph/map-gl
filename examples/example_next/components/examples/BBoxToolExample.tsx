@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Map, useMap, Layer, Source, BBoxTool } from "@dimapio/map-gl";
+import { Map, useMap, Layer, Source, BBoxTool } from "@cartoglyph/map-gl";
 import { type GeoJSONFeature } from "mapbox-gl";
 
 const BBoxToolExample = () => {
