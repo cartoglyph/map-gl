@@ -3,11 +3,12 @@ import React, { useEffect, useMemo } from "react";
 import { Map, Layer, Source, useSyntheticPopup } from "@cartoglyph/map-gl";
 
 const rawCities = [
-  { key: "madison", lngLat: [-89.4012, 43.0731], txt: "Capital of Wisconsin" },
+  { key: "madison", lngLat: [-89.4012, 43.0731], txt: "Where It All Began" },
   { key: "nyc", lngLat: [-74.006, 40.7128], txt: "The Big Apple" },
   { key: "chicago", lngLat: [-87.6298, 41.8781], txt: "Windy City" },
   { key: "sf", lngLat: [-122.4194, 37.7749], txt: "Bay Area" },
   { key: "austin", lngLat: [-97.7431, 30.2672], txt: "Live-Music Capital" },
+  { key: "naples", lngLat: [-81.7948, 26.142], txt: "It's Florida, Man." },
 ] as const;
 
 /* helper to make a GeoJSON point */
