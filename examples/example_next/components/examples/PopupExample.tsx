@@ -42,6 +42,7 @@ const PopupExample = () => {
       />
       <ClickPopup layerId="urban-areas-fill">
         {({ features: [feature] }) => {
+          console.log("click!", feature);
           return (
             <div className="flex-col">
               {Object.entries(feature.properties || {}).map(([key, value]) => (

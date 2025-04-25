@@ -18,6 +18,12 @@ const EXAMPLES: Record<ExampleRoute, React.ComponentType> = {
   [ExampleRoutes.Popup]: dynamic(
     () => import("@/components/examples/PopupExample")
   ),
+  [ExampleRoutes.Popup2]: dynamic(
+    () => import("@/components/examples/LayerPopupExample2")
+  ),
+  [ExampleRoutes.Popup3]: dynamic(
+    () => import("@/components/examples/SyntheticPopupExample2")
+  ),
   [ExampleRoutes.LayerPopup]: dynamic(
     () => import("@/components/examples/LayerPopupExample")
   ),

@@ -1,15 +1,15 @@
 import React from "react";
-import { createPortal } from "react-dom";
 import { useLayerEvent, useMap } from "@/hooks";
-import { PopupEvent, PopupOptions, Popup as PopupType } from "@/types";
+import { PopupEvent } from "@/types";
 import mapboxgl from "mapbox-gl";
+import Popup from "./Popup";
 
-const DefaultPopupOptions: Partial<PopupOptions> = {
+const DefaultPopupOptions: Partial<mapboxgl.PopupOptions> = {
   closeButton: false,
 };
 type HoverPopupProps = {
   layerId: string;
-  options?: Partial<PopupOptions>;
+  options?: Partial<mapboxgl.PopupOptions>;
   children: (e: PopupEvent) => React.ReactNode;
 };
 const HoverPopup: React.FC<HoverPopupProps> = ({
@@ -18,39 +18,19 @@ const HoverPopup: React.FC<HoverPopupProps> = ({
   children,
 }) => {
   const map = useMap();
-  const popupRef = React.useRef<PopupType | null>(null);
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
   const [event, setEvent] = React.useState<PopupEvent | null>(null);
+  const [lngLat, setLngLat] = React.useState<mapboxgl.LngLat | null>(null);
 
-  React.useEffect(() => {
-    if (!map) return;
-    const container = document.createElement("div");
-    containerRef.current = container;
-    const popup = new mapboxgl.Popup({ ...DefaultPopupOptions, ...options });
-    popup.setDOMContent(container);
-    popupRef.current = popup;
-    return () => {
-      popup.remove();
-      containerRef.current?.remove();
-      containerRef.current = null;
-    };
-  }, [map]);
   useLayerEvent({
     map,
     type: "mousemove",
     layerId,
     callback: (e) => {
-      if (!containerRef.current) return;
       if (!map) return;
       const features = e.features || [];
       if (!features.length) return;
-      popupRef.current?.setLngLat(e.lngLat);
-      setEvent((prev) => {
-        if (!prev) {
-          popupRef.current?.addTo(map);
-        }
-        return { features, lngLat: e.lngLat, point: e.point };
-      });
+      setLngLat(e.lngLat);
+      setEvent({ features, lngLat: e.lngLat, point: e.point });
     },
   });
   useLayerEvent({
@@ -60,12 +40,15 @@ const HoverPopup: React.FC<HoverPopupProps> = ({
     callback: () => {
       if (!map) return;
       setEvent(null);
-      popupRef.current?.remove();
     },
   });
-  if (!containerRef.current) return null;
   if (!event) return null;
-  return createPortal(children(event), containerRef.current);
+  if (!lngLat) return null;
+  return (
+    <Popup lngLat={lngLat} options={options}>
+      {children(event)}
+    </Popup>
+  );
 };
 
 export default HoverPopup;

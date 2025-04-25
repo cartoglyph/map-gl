@@ -6,6 +6,8 @@ export const ExampleRoutes = {
   Source: "/example/source",
   Layer: "/example/layer",
   Popup: "/example/popup",
+  Popup2: "/example/popup2",
+  Popup3: "/example/popup3",
   LayerPopup: "/example/use-layer-popup",
   SyntheticPopup: "/example/use-synthetic-popup",
   BBoxTool: "/example/bbox-tool",
@@ -63,13 +65,13 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
   },
   {
     type: "link",
-    label: "useLayerPopup",
-    route: ExampleRoutes.LayerPopup,
+    label: "Popup2",
+    route: ExampleRoutes.Popup2,
   },
   {
     type: "link",
-    label: "useSyntheticPopup",
-    route: ExampleRoutes.SyntheticPopup,
+    label: "Popup3",
+    route: ExampleRoutes.Popup3,
   },
   {
     type: "link",
@@ -80,6 +82,20 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     type: "link",
     label: "DrawPolygonTool",
     route: ExampleRoutes.DrawPolygonTool,
+  },
+  {
+    type: "heading",
+    heading: "Hooks",
+  },
+  {
+    type: "link",
+    label: "useLayerPopup",
+    route: ExampleRoutes.LayerPopup,
+  },
+  {
+    type: "link",
+    label: "useSyntheticPopup",
+    route: ExampleRoutes.SyntheticPopup,
   },
   {
     type: "heading",
