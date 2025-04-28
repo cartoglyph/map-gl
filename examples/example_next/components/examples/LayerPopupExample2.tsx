@@ -1,14 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  Map,
-  useMap,
-  Layer,
-  Source,
-  useLayerPopup,
-  useLayerEvent,
-} from "@cartoglyph/map-gl";
+import { Map, Layer, Source, ClickPopup, HoverPopup } from "@cartoglyph/map-gl";
 
 export default function LayerPopupExample() {
   return (
@@ -43,39 +36,18 @@ export default function LayerPopupExample() {
 }
 
 const Popups = () => {
-  const map = useMap("main");
-  const clickPopup = useLayerPopup({ offset: 12 });
-  const hoverPopup = useLayerPopup({ offset: 8 });
-  useLayerEvent({
-    map,
-    type: "click",
-    layerId: "urban-areas-fill",
-    callback: clickPopup.open,
-  });
-  useLayerEvent({
-    map,
-    type: "mousemove",
-    layerId: "urban-areas-fill",
-    callback: hoverPopup.open,
-  });
-  useLayerEvent({
-    map,
-    type: "mouseleave",
-    layerId: "urban-areas-fill",
-    callback: hoverPopup.close,
-  });
   return (
     <>
-      <clickPopup.Portal>
+      <ClickPopup layerId="urban-areas-fill" options={{ offset: 12 }}>
         {(e) => (
           <PopupTemplate label="CLICK" color="indigo" data={e.features[0]} />
         )}
-      </clickPopup.Portal>
-      <hoverPopup.Portal>
+      </ClickPopup>
+      <HoverPopup layerId="urban-areas-fill" options={{ offset: 8 }}>
         {(e) => (
           <PopupTemplate label="HOVER" color="pink" data={e.features[0]} />
         )}
-      </hoverPopup.Portal>
+      </HoverPopup>
     </>
   );
 };

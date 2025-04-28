@@ -2,9 +2,11 @@ import { useRef, useCallback, useState, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import mapboxgl from "mapbox-gl";
 import { useMap } from "@/hooks";
-import type { MapLayerEvent, PopupEvent, PopupOptions } from "@/types";
+import type { MapLayerEvent, PopupEvent } from "@/types";
 
-export default function useLayerPopup(opts: Partial<PopupOptions> = {}) {
+export default function useLayerPopup(
+  opts: Partial<mapboxgl.PopupOptions> = {}
+) {
   const map = useMap();
   const popupRef = useRef<mapboxgl.Popup | null>(null);
   const container = useRef<HTMLDivElement | null>(null);

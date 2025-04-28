@@ -9,8 +9,6 @@ export type OrderedLayersSpecification = Record<
 export type MapLayerEvent = mapboxgl.MapTouchEvent | mapboxgl.MapMouseEvent;
 export type MapEventCallback = (ev: MapLayerEvent) => void;
 
-export type Popup = mapboxgl.Popup;
-export type PopupOptions = mapboxgl.PopupOptions;
 export type PopupEvent = {
   lngLat: mapboxgl.LngLat;
   point: mapboxgl.Point;

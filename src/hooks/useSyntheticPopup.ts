@@ -2,7 +2,7 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import mapboxgl from "mapbox-gl";
 import { useMap } from "@/hooks";
-import type { PopupOptions, PopupEvent } from "@/types";
+import type { PopupEvent } from "@/types";
 
 export type SyntheticPopupInput = {
   key: string; // unique id per popup
@@ -10,7 +10,9 @@ export type SyntheticPopupInput = {
   features: mapboxgl.GeoJSONFeature[]; // what you get back in <Portals>
 };
 
-export default function useSyntheticPopup(opts?: Partial<PopupOptions>) {
+export default function useSyntheticPopup(
+  opts?: Partial<mapboxgl.PopupOptions>
+) {
   const map = useMap();
   const containersRef = useRef<Record<string, HTMLDivElement>>({});
   const popupsRef = useRef<Record<string, mapboxgl.Popup>>({});
