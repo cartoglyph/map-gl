@@ -1,6 +1,12 @@
 "use client";
 import React from "react";
-import { Map, useMap, Layer, Source, DrawPolygonTool } from "@dimapio/map-gl";
+import {
+  Map,
+  useMap,
+  Layer,
+  Source,
+  DrawPolygonTool,
+} from "@cartoglyph/map-gl";
 import { FeatureCollection, Polygon } from "geojson";
 
 const DrawPolygonToolExample = () => {

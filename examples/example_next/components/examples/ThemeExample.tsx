@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
-import { Map, useMap, Layer, Source, BBoxTool } from "@dimapio/map-gl";
+import { Map, useMap, Layer, Source, BBoxTool } from "@cartoglyph/map-gl";
 import { GeoJSONFeature } from "mapbox-gl";
 
-const BBoxToolExample = () => {
+const ThemeExample = () => {
   const map = useMap("main");
   const [isSelecting, setIsSelecting] = React.useState<boolean>(false);
   const [features, setFeatures] = React.useState<GeoJSONFeature[]>([]);
@@ -71,4 +71,4 @@ const BBoxToolExample = () => {
   );
 };
 
-export default BBoxToolExample;
+export default ThemeExample;

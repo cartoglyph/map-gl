@@ -4,7 +4,7 @@ import Sidebar from "@/components/Sidebar";
 import { SIDEBAR_ITEMS } from "@/types";
 
 export const metadata: Metadata = {
-  title: "@dimapio/map-gl",
+  title: "@cartoglyph/map-gl",
   description: "mapbox-gl library",
 };
 
