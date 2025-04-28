@@ -3,27 +3,6 @@
 import React from "react";
 import { Map, Layer, Source, ClickPopup, HoverPopup } from "@cartoglyph/map-gl";
 
-const fakeFeature = {
-  type: "Feature",
-  geometry: {
-    type: "Point",
-    coordinates: [-89.4012, 43.0731],
-  },
-  properties: {
-    message: "Hello from the static popup!",
-  },
-  layer: {
-    id: "custom",
-    type: "symbol",
-    source: "static",
-    layout: {},
-    paint: {},
-  },
-  source: "custom",
-  sourceLayer: "",
-  state: {},
-} as any;
-
 export default function LayerPopupExample() {
   return (
     <Map
