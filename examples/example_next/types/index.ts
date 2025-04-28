@@ -6,11 +6,8 @@ export const ExampleRoutes = {
   Source: "/example/source",
   Layer: "/example/layer",
   Popup: "/example/popup",
-<<<<<<< HEAD
   Popup2: "/example/popup2",
   Popup3: "/example/popup3",
-=======
->>>>>>> c156caf93c4288aed7faa8944d64df1a20f4b5e0
   LayerPopup: "/example/use-layer-popup",
   SyntheticPopup: "/example/use-synthetic-popup",
   BBoxTool: "/example/bbox-tool",
