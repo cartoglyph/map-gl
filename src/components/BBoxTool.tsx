@@ -2,6 +2,7 @@ import React from "react";
 import mapboxgl from "mapbox-gl";
 import { useComponentTheme, useMap, useMapEvent } from "@/hooks";
 import { BBoxStyle, MapLayerEvent } from "@/types";
+import { enableAllMapControls } from "@/utils/map-utils";
 
 function getPoint(map: mapboxgl.Map, e: MapLayerEvent): mapboxgl.Point {
   const canvas = map.getCanvasContainer();
@@ -35,21 +36,9 @@ const BBoxTool: React.FC<BBoxToolProps> = ({ disabled, bboxStyle, onBBox }) => {
   React.useEffect(() => {
     if (!map) return;
     if (disabled) return;
-    map.dragPan.disable();
-    map.dragRotate.disable();
-    map.boxZoom.disable();
-    map.scrollZoom.disable();
-    map.touchPitch.disable();
-    map.touchZoomRotate.disable();
-    map.doubleClickZoom.disable();
+    enableAllMapControls(map, false);
     return () => {
-      map.dragPan.enable();
-      map.dragRotate.enable();
-      map.boxZoom.enable();
-      map.scrollZoom.enable();
-      map.touchPitch.enable();
-      map.touchZoomRotate.enable();
-      map.doubleClickZoom.enable();
+      enableAllMapControls(map, true);
     };
   }, [map, disabled]);
   useMapEvent({

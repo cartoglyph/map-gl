@@ -36,6 +36,9 @@ const EXAMPLES: Record<ExampleRoute, React.ComponentType> = {
   [ExampleRoutes.DrawPolygonTool]: dynamic(
     () => import("@/components/examples/DrawPolygonToolExample")
   ),
+  [ExampleRoutes.EditPolygonTool]: dynamic(
+    () => import("@/components/examples/EditPolygonToolExample")
+  ),
   [ExampleRoutes.Theme]: dynamic(
     () => import("@/components/examples/ThemeExample")
   ),
