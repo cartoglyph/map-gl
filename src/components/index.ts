@@ -6,3 +6,4 @@ export { default as HoverPopup } from "./HoverPopup";
 export { default as BBoxTool } from "./BBoxTool";
 export { default as DrawPolygonTool } from "./DrawPolygonTool";
 export { default as Popup } from "./Popup";
+export { default as EditPolygonTool } from "./EditPolygonTool";
