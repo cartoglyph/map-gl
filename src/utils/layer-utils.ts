@@ -13,7 +13,13 @@ export function addLayer(
     const source = map.getSource(options.source);
     if (!source) return;
   }
-  map.addLayer(options, options.beforeId);
+  // Check if `beforeId` layer exists on map
+  let beforeId: string | undefined = undefined;
+  if (options.beforeId) {
+    const beforeLayer = map.getLayer(options.beforeId);
+    if (beforeLayer) beforeId = options.beforeId;
+  }
+  map.addLayer(options, beforeId);
   return map.getLayer(options.id);
 }
 

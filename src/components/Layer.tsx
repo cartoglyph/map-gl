@@ -60,7 +60,7 @@ const Layer: React.FC<LayerProps> = (props) => {
     map: mapStore.map,
     type: "mouseover",
     layerId: options.id,
-    disabled: !hoverCursor,
+    disabled: !hover || !hoverCursor,
     callback: () => {
       if (!mapStore.map || !propsRef.current.hoverCursor) return;
       mapStore.map.getCanvas().style.cursor = propsRef.current.hoverCursor;

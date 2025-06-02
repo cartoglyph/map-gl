@@ -12,6 +12,7 @@ export const ExampleRoutes = {
   SyntheticPopup: "/example/use-synthetic-popup",
   BBoxTool: "/example/bbox-tool",
   DrawPolygonTool: "/example/draw-polygon-tool",
+  EditPolygonTool: "/example/edit-polygon-tool",
   Theme: "/example/theme",
 } as const;
 
@@ -82,6 +83,11 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     type: "link",
     label: "DrawPolygonTool",
     route: ExampleRoutes.DrawPolygonTool,
+  },
+  {
+    type: "link",
+    label: "EditPolygonTool",
+    route: ExampleRoutes.EditPolygonTool,
   },
   {
     type: "heading",
