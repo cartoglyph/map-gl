@@ -36,6 +36,9 @@ const DrawPolygonTool: React.FC<EditPolygonToolProps> = ({
   const editedPointRef = React.useRef<
     { ringIndex: number; coordinateIndex: number } | undefined
   >();
+  const polygonPointsRef = React.useRef<FeatureCollection<Point>>();
+  const polygonLinesRef = React.useRef<FeatureCollection<LineString>>();
+  const polygonRef = React.useRef<Feature<Polygon>>(polygon);
 
   const fillSourceId = `${id}-fill-source`;
   const fillLayerId = `${id}-fill-layer`;
@@ -46,11 +49,23 @@ const DrawPolygonTool: React.FC<EditPolygonToolProps> = ({
   const pointSourceId = `${id}-point-source`;
   const pointLayerId = `${id}-point-layer`;
 
-  // Get all the polygon points
-  const polygonPoints: FeatureCollection<Point> = React.useMemo(() => {
+  // Convert polygon into lines and points
+  React.useEffect(() => {
+    if (!map) return;
+    const lines: Feature<LineString>[] = [];
     const points: Feature<Point>[] = [];
     let index: number = 0;
     polygon.geometry.coordinates.forEach((ring, ringIndex) => {
+      lines.push({
+        type: "Feature",
+        properties: {
+          ringIndex,
+        },
+        geometry: {
+          type: "LineString",
+          coordinates: ring,
+        },
+      });
       ring.forEach((coordinates, coordinateIndex) => {
         // Skip last "joining" point that completes the polygon
         if (coordinateIndex === ring.length - 1) return;
@@ -68,14 +83,30 @@ const DrawPolygonTool: React.FC<EditPolygonToolProps> = ({
         index++;
       });
     });
-
-    return {
+    polygonLinesRef.current = {
+      type: "FeatureCollection",
+      features: lines,
+    };
+    polygonPointsRef.current = {
       type: "FeatureCollection",
       features: points,
     };
-  }, [polygon]);
+    polygonRef.current = polygon;
+    const lineSrc = map.getSource(lineSourceId);
+    if (lineSrc && lineSrc.type === "geojson") {
+      lineSrc.setData(polygonLinesRef.current);
+    }
+    const pointSrc = map.getSource(pointSourceId);
+    if (pointSrc && pointSrc.type === "geojson") {
+      pointSrc.setData(polygonPointsRef.current);
+    }
+    const polygonSrc = map.getSource(fillSourceId);
+    if (polygonSrc && polygonSrc.type === "geojson") {
+      polygonSrc.setData(polygonRef.current);
+    }
+  }, [map, polygon]);
 
-  /** Polygon Points - Mouse Down */
+  // Polygon Points - Mouse Down
   useLayerEvent({
     map,
     type: "mousedown",
@@ -96,7 +127,83 @@ const DrawPolygonTool: React.FC<EditPolygonToolProps> = ({
     },
   });
 
-  /** Map - Mouse Up */
+  // Map - Mouse Move
+  useMapEvent({
+    map,
+    type: "mousemove",
+    disabled,
+    callback: (e) => {
+      if (!map) return;
+      // Check if editing a point
+      if (editedPointRef.current === undefined) return;
+      const { ringIndex, coordinateIndex } = editedPointRef.current;
+      const nextPoint = [e.lngLat.lng, e.lngLat.lat];
+
+      // Update the points of the polygon
+      const pointSrc = map.getSource(pointSourceId);
+      if (!pointSrc || pointSrc.type !== "geojson") return;
+      const nextPointFeatures =
+        polygonPointsRef.current?.features.map((feature) => {
+          if (
+            Number(feature.properties?.ringIndex) === ringIndex &&
+            Number(feature.properties?.coordinateIndex) === coordinateIndex
+          ) {
+            return {
+              ...feature,
+              geometry: {
+                ...feature.geometry,
+                coordinates: nextPoint,
+              },
+            };
+          }
+          return feature;
+        }) || [];
+
+      const polygonPoints: FeatureCollection<Point> = {
+        type: "FeatureCollection",
+        features: nextPointFeatures,
+      };
+      polygonPointsRef.current = polygonPoints;
+      pointSrc.setData(polygonPoints);
+
+      // Update the line string that connects the points
+      const lineSrc = map.getSource(lineSourceId);
+      if (!lineSrc || lineSrc.type !== "geojson") return;
+      const nextLineString = polygonLinesRef.current?.features[0];
+      if (!nextLineString) return;
+      nextLineString.geometry.coordinates[coordinateIndex] = nextPoint;
+      if (coordinateIndex === 0) {
+        // If edited point was first within it's ring, then also update the last coordinate
+        const lastCoordinateIndex =
+          nextLineString.geometry.coordinates.length - 1;
+        nextLineString.geometry.coordinates[lastCoordinateIndex] = nextPoint;
+      }
+      const polygonLines: FeatureCollection<LineString> = {
+        type: "FeatureCollection",
+        features: [nextLineString],
+      };
+      polygonLinesRef.current = polygonLines;
+      lineSrc.setData(polygonLines);
+
+      // Update the fill that connects the points
+      const polygonSrc = map.getSource(fillSourceId);
+      if (!polygonSrc || polygonSrc.type !== "geojson") return;
+      const coordinates = polygonRef.current.geometry.coordinates;
+      coordinates[ringIndex][coordinateIndex] = nextPoint;
+      const polygonFill: Feature<Polygon> = {
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "Polygon",
+          coordinates,
+        },
+      };
+      polygonRef.current = polygonFill;
+      polygonSrc.setData(polygonFill);
+    },
+  });
+
+  // Map - Mouse Up
   useMapEvent({
     map,
     type: "mouseup",
@@ -178,7 +285,7 @@ const DrawPolygonTool: React.FC<EditPolygonToolProps> = ({
         id={pointSourceId}
         options={{
           type: "geojson",
-          data: polygonPoints,
+          data: { type: "FeatureCollection", features: [] },
           generateId: true,
         }}
       />
@@ -195,15 +302,13 @@ const DrawPolygonTool: React.FC<EditPolygonToolProps> = ({
           },
         }}
       />
-      {/* <Source
+      {/** Editable Polygon Line */}
+      <Source
         id={lineSourceId}
         options={{
           type: "geojson",
-          data: {
-            type: "Feature",
-            properties: {},
-            geometry: { type: "LineString", coordinates: [] },
-          },
+          data: { type: "FeatureCollection", features: [] },
+          generateId: true,
         }}
       />
       <Layer
@@ -222,27 +327,6 @@ const DrawPolygonTool: React.FC<EditPolygonToolProps> = ({
           },
         }}
       />
-      <Source
-        id={pointSourceId}
-        options={{
-          type: "geojson",
-          data: {
-            type: "FeatureCollection",
-            features: [],
-          },
-        }}
-      />
-      <Layer
-        options={{
-          id: pointLayerId,
-          source: pointSourceId,
-          type: "circle",
-          paint: {
-            "circle-color": "blue",
-            "circle-radius": 5,
-          },
-        }}
-      /> */}
     </>
   );
 };
